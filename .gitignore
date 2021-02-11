@@ -1,0 +1,9 @@
+/build
+/Debug
+/log
+/out
+/.vs
+/aruco
+CmakeSettings.json
+raspicam-*.zip
+*.mp3
