@@ -30,6 +30,7 @@
 #include "ubridge.h"
 #include "ujoy.h"
 #include "uplay.h"
+#include "uloader.h"
 
 
 /**
@@ -48,6 +49,8 @@ private:
   /**
    * Pointer to camera (class) of this mission application */
   UCamera * cam;
+  //Pointer to mission segment loader
+  ULoader* loader;
   /** is thread active */
   bool active = false;
   // thread on Regbot

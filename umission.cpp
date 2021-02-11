@@ -40,6 +40,8 @@ UMission::UMission(UBridge * regbot, UCamera * camera)
     // terminate c-strings strings - good practice, but not needed
     lines[i][0] = '\0';
   }
+  //Create loader
+  loader = new ULoader("./missions");
   // start mission thread
   th1 = new thread(runObj, this);
 //   play.say("What a nice day for a stroll\n", 100);
@@ -361,6 +363,7 @@ void UMission::runMission()
 bool UMission::mission1(int & state)
 {
   bool finished = false;
+  int linecount = 0;
   // First commands to send to robobot in given mission
   // (robot sends event 1 after driving 1 meter)):
   switch (state)
@@ -378,15 +381,17 @@ bool UMission::mission1(int & state)
         state = 10;
       break;
     case 10: // first PART - wait for IR2 then go fwd and turn
-      snprintf(lines[0], MAX_LEN, "vel=0 : ir2 < 0.3");
+      
+      loader->loadMission("test.mission", lines, &linecount);
+      //snprintf(lines[0], MAX_LEN, "vel=0 : ir2 < 0.3");
       // drive straight 0.6m - keep an acceleration limit of 1m/s2 (until changed)
-      snprintf(lines[1], MAX_LEN, "vel=0.2,acc=1:dist=0.6");
+      //snprintf(lines[1], MAX_LEN, "vel=0.2,acc=1:dist=0.6");
       // stop and create an event when arrived at this line
-      snprintf(lines[2], MAX_LEN, "event=1, vel=0");
+      //snprintf(lines[2], MAX_LEN, "event=1, vel=0");
       // add a line, so that the robot is occupied until next snippet has arrived
-      snprintf(lines[3], MAX_LEN, ": dist=1");
+      //snprintf(lines[3], MAX_LEN, ": dist=1");
       // send the 4 lines to the REGBOT
-      sendAndActivateSnippet(lines, 4);
+      sendAndActivateSnippet(lines, linecount);
       // make sure event 1 is cleared
       bridge->event->isEventSet(1);
       // tell the operator
