@@ -2,6 +2,9 @@ cmake_minimum_required(VERSION 2.6)
 project(robobot)
 #find_package(raspicam REQUIRED)
 find_package(raspicam)
+# Finding flex and Bison for possible parser generation
+find_package(BISON)
+find_package(FLEX)
 if (raspicam_FOUND)
   set(EXTRA_CC_FLAGS " -O2 -g0")
   message("CMAKE found raspberry camere module")
@@ -15,7 +18,24 @@ find_package(Threads REQUIRED)
 include_directories(${OpenCV_INCLUDE_DIRS})
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic -std=c++11 ${EXTRA_CC_FLAGS}")
 set(CMAKE_C_FLAGS ${CMAKE_C_FLAGS} "-pthread")
+
+if (BISON_FOUND AND FLEX_FOUND)
+
+	BISON_TARGET(MissionParser "mission_parser/mission.y" ${CMAKE_SOURCE_DIR}/mission_parser/mission_parser.cpp)
+	FLEX_TARGET(MissionScanner "mission_parser/mission.l" ${CMAKE_SOURCE_DIR}/mission_parser/mission_lexer.cpp)
+	ADD_FLEX_BISON_DEPENDENCY(MissionScanner MissionParser)
+
+endif()
+
 add_executable(mission main.cpp urun.cpp ucamera.cpp ubridge.cpp umission.cpp utime.cpp tcpCase.cpp uevent.cpp ujoy.cpp uinfo.cpp umotor.cpp uedge.cpp upose.cpp uirdist.cpp uaccgyro.cpp uaruco.cpp ulibpose2pose.cpp ulib2dline.cpp ulibpose.cpp ulibposev.cpp uloader.cpp)
+
+
+set_source_files_properties(${FLEX_mission_parser_OUTPUTS} PROPERTIES COMPILE_FLAGS "-lfl")
+add_executable(mission_parser ${BISON_MissionParser_OUTPUTS} ${FLEX_MissionScanner_OUTPUTS} "mission_parser/parser_test.c")
+target_link_libraries(mission_parser ${FLEX_LIBRARIES})
+#add_compile_options(mission_parser PUBLIC "-lfl" )
+
+
 file(GLOB MISSIONS "missions/*")
 file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/missions")
 configure_file(${MISSIONS} "./missions/" COPYONLY)
