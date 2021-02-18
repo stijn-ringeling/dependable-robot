@@ -1,0 +1,2 @@
+vel=0.3,acc=1,edger=1,white=1: xl > 15
+vel=0.3,acc=1,edger=1,white=1,event=1

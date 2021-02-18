@@ -27,6 +27,7 @@
 #include "utime.h"
 #include "ulibpose2pose.h"
 
+#define SEESAW_TILT -20
 
 UMission::UMission(UBridge * regbot, UCamera * camera)
 {
@@ -383,20 +384,12 @@ bool UMission::mission1(int & state)
     case 10: // first PART - wait for IR2 then go fwd and turn
       
       loader->loadMission("follow_line.mission", lines, &linecount);
-      //snprintf(lines[0], MAX_LEN, "vel=0 : ir2 < 0.3");
-      // drive straight 0.6m - keep an acceleration limit of 1m/s2 (until changed)
-      //snprintf(lines[1], MAX_LEN, "vel=0.2,acc=1:dist=0.6");
-      // stop and create an event when arrived at this line
-      //snprintf(lines[2], MAX_LEN, "event=1, vel=0");
-      // add a line, so that the robot is occupied until next snippet has arrived
-      //snprintf(lines[3], MAX_LEN, ": dist=1");
-      // send the 4 lines to the REGBOT
       sendAndActivateSnippet(lines, linecount);
-      // make sure event 1 is cleared
+      //clear event 1
       bridge->event->isEventSet(1);
       // tell the operator
       printf("# case=%d sent mission snippet 1\n", state);
-//       system("espeak \"code snippet 1.\" -ven+f4 -s130 -a5 2>/dev/null &"); 
+      //system("espeak \"code snippet 1.\" -ven+f4 -s130 -a5 2>/dev/null &"); 
       play.say("Code snippet 1.", 90);
       bridge->send("oled 5 code snippet 1");
       //
@@ -409,11 +402,36 @@ bool UMission::mission1(int & state)
       featureCnt = 0;
       break;
     case 11:
-      // wait for event 1 (send when finished driving first part)
+      // wait until the robot reach the crossing line -> event=1 set
       if (bridge->event->isEventSet(1))
       { // finished first drive
-        state = 999;
+        state++;
+        printf("# case=%d event 1 sensed -> robot at the crossing line\n", state);
         play.stopPlaying();
+      }
+      break;
+    case 12:
+      //capture gyroscope data until the robot has tilt
+      // bridge->imu->gyro[0]  Rotation velocity around x-axis [degree/sec]
+      // bridge->imu->gyro[1]  y-axis
+      // bridge->imu->gyro[2]  z-axis
+      /* TUNE TILT PARAMETER AND AXIS OF CHANGE */
+      if(bridge->imu->gyro[2] > SEESAW_TILT){ //condition of stop
+        // load stop mission and send it to the RoboBot
+        loader->loadMission("stop.mission", lines, &linecount);
+        sendAndActivateSnippet(lines, linecount);
+        //clear event 1
+        bridge->event->isEventSet(2);
+        // tell the operator
+        printf("# case=%d sent STOP mission snippet\n", state);
+
+        state = 21;
+      } 
+      break;
+    case 21:
+      if (bridge->event->isEventSet(2)){
+        state = 999;
+        printf("# case=%d event 2 sensed -> the robot stop");
       }
       break;
     case 999:
@@ -428,7 +446,7 @@ bool UMission::mission1(int & state)
 
 
 /**
- * Run mission
+ * Run mission1: follow line sinse the crossing line, follow left line until the seesaw tilt
  * \param state is kept by caller, but is changed here
  *              therefore defined as reference with the '&'.
  *              State will be 0 at first call.
