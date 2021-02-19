@@ -382,7 +382,7 @@ bool UMission::mission1(int & state)
       break;
     case 10: // first PART - wait for IR2 then go fwd and turn
       
-      loader->loadMission("test.mission", lines, &linecount);
+      loader->loadMission("follow_line.mission", lines, &linecount);
       //snprintf(lines[0], MAX_LEN, "vel=0 : ir2 < 0.3");
       // drive straight 0.6m - keep an acceleration limit of 1m/s2 (until changed)
       //snprintf(lines[1], MAX_LEN, "vel=0.2,acc=1:dist=0.6");
@@ -436,6 +436,8 @@ bool UMission::mission1(int & state)
 bool UMission::mission2(int & state)
 {
   bool finished = false;
+  //Skip second mission
+  return true;
   // First commands to send to robobot in given mission
   // (robot sends event 1 after driving 1 meter)):
   switch (state)
