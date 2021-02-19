@@ -27,7 +27,7 @@
 #include "utime.h"
 #include "ulibpose2pose.h"
 
-#define SEESAW_TILT -20
+#define SEESAW_TILT 500
 
 UMission::UMission(UBridge * regbot, UCamera * camera)
 {
@@ -383,7 +383,7 @@ bool UMission::mission1(int & state)
       break;
     case 10: // first PART - wait for IR2 then go fwd and turn
       
-      loader->loadMission("follow_line.mission", lines, &linecount);
+      loader->loadMission("follow_line_till_seesaw.mission", lines, &linecount);
       sendAndActivateSnippet(lines, linecount);
       //clear event 1
       bridge->event->isEventSet(1);
@@ -416,12 +416,14 @@ bool UMission::mission1(int & state)
       // bridge->imu->gyro[1]  y-axis
       // bridge->imu->gyro[2]  z-axis
       /* TUNE TILT PARAMETER AND AXIS OF CHANGE */
+      printf("Trunrate: %f\n",bridge->imu->turnrate());
       if(bridge->imu->gyro[2] > SEESAW_TILT){ //condition of stop
         // load stop mission and send it to the RoboBot
+        bridge->event->eventFlags[2] = true;
         loader->loadMission("stop.mission", lines, &linecount);
         sendAndActivateSnippet(lines, linecount);
         //clear event 1
-        bridge->event->isEventSet(2);
+        bridge->event->isEventSet(3);
         // tell the operator
         printf("# case=%d sent STOP mission snippet\n", state);
 
@@ -429,7 +431,7 @@ bool UMission::mission1(int & state)
       } 
       break;
     case 21:
-      if (bridge->event->isEventSet(2)){
+      if (bridge->event->isEventSet(3)){
         state = 999;
         printf("# case=%d event 2 sensed -> the robot stop");
       }
