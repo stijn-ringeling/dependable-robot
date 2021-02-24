@@ -27,7 +27,7 @@
 #include "utime.h"
 #include "ulibpose2pose.h"
 
-#define SEESAW_TILT 500
+#define SEESAW_TILT 150
 
 UMission::UMission(UBridge * regbot, UCamera * camera)
 {
@@ -405,37 +405,69 @@ bool UMission::mission1(int & state)
       // wait until the robot reach the crossing line -> event=1 set
       if (bridge->event->isEventSet(1))
       { // finished first drive
+        bridge->event->isEventSet(2);
         state++;
         printf("# case=%d event 1 sensed -> robot at the crossing line\n", state);
         play.stopPlaying();
       }
       break;
     case 12:
-      //capture gyroscope data until the robot has tilt
+      // wait for event 2 -> catch the ball
       // bridge->imu->gyro[0]  Rotation velocity around x-axis [degree/sec]
       // bridge->imu->gyro[1]  y-axis
       // bridge->imu->gyro[2]  z-axis
       /* TUNE TILT PARAMETER AND AXIS OF CHANGE */
-      printf("Trunrate: %f\n",bridge->imu->turnrate());
-      if(bridge->imu->gyro[2] > SEESAW_TILT){ //condition of stop
+      //printf("Trunrate: %f\n",bridge->imu->turnrate());
+      if(bridge->event->isEventSet(2)){ //condition of stop
         // load stop mission and send it to the RoboBot
-        bridge->event->eventFlags[2] = true;
+        printf("# case=%d event 2 sensed - stop mission to catch the ball\n",state);
         loader->loadMission("stop.mission", lines, &linecount);
         sendAndActivateSnippet(lines, linecount);
+        //loader->loadMission("catch.mission", lines, &linecount);
+        //sendAndActivateSnippet(lines, linecount);
+        //bridge->
         //clear event 1
         bridge->event->isEventSet(3);
         // tell the operator
-        printf("# case=%d sent STOP mission snippet\n", state);
+        //printf("# case=%d sent STOP mission snippet\n", state);
 
         state = 21;
       } 
       break;
     case 21:
       if (bridge->event->isEventSet(3)){
-        state = 999;
-        printf("# case=%d event 2 sensed -> the robot stop");
+        loader->loadMission("go_to_second_crossing_line.mission", lines, &linecount);
+        sendAndActivateSnippet(lines, linecount);
+        state++;
+        printf("# case=%d event 3 sensed -> roobt go off the seesaw and turn until the second crossing line");
       }
       break;
+    case 22:
+      if(bridge->event->isEventSet(4)){
+        //go up the ramp
+        loader->loadMission("up_the_ramp.mission", lines, &linecount);
+        sendAndActivateSnippet(lines,linecount);
+        bridge->event->isEventSet(5);
+        state++;
+        printf("# case=%d event 4 sensed - robot go up the rump\n",state);
+      }
+      break;
+    case 23:
+      if(bridge->imu->gyro[2] > 0 && bridge->imu->gyro[2] < 10){
+        //stop mission
+        bridge->event->eventFlags[5] = true;
+        bridge->event->isEventSet(3);
+        loader->loadMission("stop.mission", lines, &linecount);
+        sendAndActivateSnippet(lines, linecount);
+        printf("@case=%d robot is on the plate -> stop mission\n",state);
+      }
+      break;
+    case 24:
+      if(bridge->event->isEventSet(3)){
+        state=999;
+        printf("@case=%d robot stopped -> stop mission\n",state);
+      }
+
     case 999:
     default:
       printf("mission 1 ended \n");
