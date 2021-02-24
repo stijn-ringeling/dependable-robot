@@ -1,0 +1,6 @@
+  vel=0.35, acc=1, white=1 : ir2<0.25
+  vel=0 : ir2 > 3
+  vel=0 : time=1
+  vel=0.4, acc=1.5, white=1: time=5
+  vel=0
+  event=2

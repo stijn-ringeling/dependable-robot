@@ -383,7 +383,7 @@ bool UMission::mission1(int & state)
       break;
     case 10: // first PART - wait for IR2 then go fwd and turn
       
-      loader->loadMission("follow_line_till_seesaw.mission", lines, &linecount);
+      loader->loadMission("axe.mission", lines, &linecount);
       sendAndActivateSnippet(lines, linecount);
       //clear event 1
       bridge->event->isEventSet(1);
@@ -402,12 +402,12 @@ bool UMission::mission1(int & state)
       featureCnt = 0;
       break;
     case 11:
-      // wait until the robot reach the crossing line -> event=1 set
+      // wait until the robot crosses the axe -> event=1 set
       if (bridge->event->isEventSet(1))
       { // finished first drive
         bridge->event->isEventSet(2);
-        state++;
-        printf("# case=%d event 1 sensed -> robot at the crossing line\n", state);
+        state = 23;
+        printf("# case=%d event 1 sensed -> robot crossed the axe\n", state);
         play.stopPlaying();
       }
       break;
@@ -453,9 +453,8 @@ bool UMission::mission1(int & state)
       }
       break;
     case 23:
-      if(bridge->imu->gyro[2] > 0 && bridge->imu->gyro[2] < 10){
+      if(bridge->event->isEventSet(2)){
         //stop mission
-        bridge->event->eventFlags[5] = true;
         bridge->event->isEventSet(3);
         loader->loadMission("stop.mission", lines, &linecount);
         sendAndActivateSnippet(lines, linecount);
