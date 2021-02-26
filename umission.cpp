@@ -399,7 +399,6 @@ bool UMission::mission1(int & state)
       play.start();
       // go to wait for finished
       state = 11;
-      featureCnt = 0;
       break;
     case 11:
       // wait until the robot reach the crossing line -> event=1 set
@@ -421,13 +420,13 @@ bool UMission::mission1(int & state)
       if(bridge->event->isEventSet(2)){ //condition of stop
         // load stop mission and send it to the RoboBot
         printf("# case=%d event 2 sensed - stop mission to catch the ball\n",state);
-        loader->loadMission("stop.mission", lines, &linecount);
+        loader->loadMission("catch_ball.mission", lines, &linecount);
         sendAndActivateSnippet(lines, linecount);
         //loader->loadMission("catch.mission", lines, &linecount);
         //sendAndActivateSnippet(lines, linecount);
         //bridge->
         //clear event 1
-        bridge->event->isEventSet(3);
+        //bridge->event->isEventSet(3);
         // tell the operator
         //printf("# case=%d sent STOP mission snippet\n", state);
 
@@ -440,6 +439,7 @@ bool UMission::mission1(int & state)
         sendAndActivateSnippet(lines, linecount);
         state++;
         printf("# case=%d event 3 sensed -> roobt go off the seesaw and turn until the second crossing line");
+        return true;
       }
       break;
     case 22:
