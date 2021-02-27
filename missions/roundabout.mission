@@ -1,0 +1,7 @@
+vel=0: ir>=01.4
+vel=0: ir<=0.6
+vel=0: ir>=1.4
+vel=0: time =5
+vel=0.4, acc=1.5, white=1: ir <20
+vel=0
+event=2
