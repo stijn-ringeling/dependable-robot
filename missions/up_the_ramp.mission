@@ -1,2 +1,4 @@
-vel=0.3, acc=1, edger=0, white=1 : event=5
-:dist=1
+vel=0, edger=0 : time=1
+vel=0.3,edger=0,white=1 : dist=1.5
+
+vel=0:dist=1
