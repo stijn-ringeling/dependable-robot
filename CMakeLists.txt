@@ -21,23 +21,27 @@ set(CMAKE_C_FLAGS ${CMAKE_C_FLAGS} "-pthread")
 
 if (BISON_FOUND AND FLEX_FOUND)
 
-	BISON_TARGET(MissionParser "mission_parser/mission.y" ${CMAKE_SOURCE_DIR}/mission_parser/mission_parser.cpp)
-	FLEX_TARGET(MissionScanner "mission_parser/mission.l" ${CMAKE_SOURCE_DIR}/mission_parser/mission_lexer.cpp)
+	BISON_TARGET(MissionParser "mission_parser/mission.y" ${CMAKE_SOURCE_DIR}/mission_parser/mission_parser.c)
+	FLEX_TARGET(MissionScanner "mission_parser/mission.l" ${CMAKE_SOURCE_DIR}/mission_parser/mission_lexer.c)
 	ADD_FLEX_BISON_DEPENDENCY(MissionScanner MissionParser)
 
 endif()
 
-add_executable(mission main.cpp urun.cpp ucamera.cpp ubridge.cpp umission.cpp utime.cpp tcpCase.cpp uevent.cpp ujoy.cpp uinfo.cpp umotor.cpp uedge.cpp upose.cpp uirdist.cpp uaccgyro.cpp uaruco.cpp ulibpose2pose.cpp ulib2dline.cpp ulibpose.cpp ulibposev.cpp uloader.cpp)
+add_executable(mission main.cpp urun.cpp ucamera.cpp ubridge.cpp umission.cpp utime.cpp tcpCase.cpp uevent.cpp ujoy.cpp uinfo.cpp umotor.cpp uedge.cpp upose.cpp uirdist.cpp uaccgyro.cpp uaruco.cpp ulibpose2pose.cpp ulib2dline.cpp ulibpose.cpp ulibposev.cpp uloader.cpp "mission_parser/mission_lexer.c")
 
 
 set_source_files_properties(${FLEX_mission_parser_OUTPUTS} PROPERTIES COMPILE_FLAGS "-lfl")
-add_executable(mission_parser ${BISON_MissionParser_OUTPUTS} ${FLEX_MissionScanner_OUTPUTS} "mission_parser/parser_test.c")
+add_executable(mission_parser ${BISON_MissionParser_OUTPUTS} ${FLEX_MissionScanner_OUTPUTS} "mission_parser/parser_test.cpp" uloader.cpp)
 target_link_libraries(mission_parser ${FLEX_LIBRARIES})
 #add_compile_options(mission_parser PUBLIC "-lfl" )
 
 
 file(GLOB MISSIONS "missions/*")
 file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/missions")
-configure_file(${MISSIONS} "./missions/" COPYONLY)
+foreach(file ${MISSIONS})
+	message("CMAKE copying ${file} to binary directory")
+	configure_file(${file} "./missions" COPYONLY)
+endforeach()
+#configure_file(${MISSIONS} "./missions/" COPYONLY)
 target_link_libraries(mission ${OpenCV_LIBS} ${raspicam_CV_LIBS} ${CMAKE_THREAD_LIBS_INIT})
 install(TARGETS mission RUNTIME DESTINATION bin)

@@ -3,10 +3,16 @@
 #include <fstream>
 #include <string>
 #include "uloader.h"
+extern "C" {
+#include "mission_parser/mission_lexer.h"
+}
 
 
 ULoader::ULoader(char* baseDir) {
 	snprintf(this->baseDir, MAX_LEN, baseDir);
+}
+ULoader::~ULoader() {
+
 }
 
 void ULoader::loadMission(char* filename, char** lines, int* lineCount) {
@@ -28,4 +34,32 @@ void ULoader::loadMission(char* filename, char** lines, int* lineCount) {
 		printf("WARNING! empty mission file\n");
 	}
 	file.close();
+}
+
+/*char** ULoader::createOutput(int lines, int lineLength) {
+	int len = sizeof(char*) * lines + sizeof(char) * lines * lineLength;
+	char** output;
+	output = (char**)malloc(len);
+	char* ptr;
+	ptr = (char*)(output + lines);
+	for (int i = 0; i < lines; i++) {
+		output[i] = (char*)(ptr + i * lineLength);
+	}
+
+	ULoader::clearOutput(output, lines);
+	return output;
+}*/
+
+void ULoader::clearOutput(char** output, int lines) {
+	for (int i = 0; i < lines; i++) {
+		output[i][0] = '\n';
+	}
+}
+
+/*void ULoader::freeOutput(char** output) {
+	free(output);
+}*/
+
+void ULoader::formatMission(char** lines, char** output, int lineCount, float* parameters) {
+	format_mission(lines, output, lineCount, parameters);
 }

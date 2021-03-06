@@ -61,8 +61,10 @@ private:
   const static int missionLineMax = 20;
   /** definition of array with c-strings for the mission snippets */
   char lineBuffer[missionLineMax][MAX_LEN];
+  char formatOutputBuffer[missionLineMax][256];
   /** an array of pointers to mission lines */
   char * lines[missionLineMax];
+  char* formatOutput[missionLineMax];
   /** logfile for mission state */
   FILE * logMission = NULL;
   

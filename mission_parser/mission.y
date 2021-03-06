@@ -4,43 +4,39 @@ This parser can then be used to check the validity of loaded mission files.
 */
 
 %require "3.2"
-%language "c++"
-%define api.parser.class { MissionParser }
+%define parse.error verbose
 
 %{
 #include <stdio.h>
+extern int yylineno;
 
 void yyerror(char *s){
-	fprintf(stderr, "error: %s\n", s);
+	fprintf(stderr, "error on line %d: %s\n", yylineno, s);
 }
+
 %}
 
-%code top{
-	static MissionParser::symbol_type yylex(MissionScanner scanner){
-		return scanner.get_next_token();
-	}
-
-}
-
-%lex-param { MissionScanner &scanner }
-%parse-param {MissionScanner &scanner}
 %token INT
 %token FLOAT
 %token THREAD
 %token EVENT
 %token EOL
+%token PARAM
+%token EQUAL
 
 %%
 full_mission: mission | thread_id_line mission {printf("Found full mission");};
 
-thread_id_line: THREAD "=" INT | "thread=" INT events;
+thread_id_line: THREAD EQUAL INT | "thread=" INT events;
 
-events: EVENT "=" INT | EVENT "=" INT ":" EVENT "=" INT;
-//val: int | float;
+events: EVENT EQUAL INT | EVENT EQUAL INT ":" EVENT EQUAL INT;
+val: INT | FLOAT;
 
-mission: %empty | mission mission_line EOL;
+mission: %empty | mission mission_line;
 
-mission_line: "bla" {printf("Found line!");};
+mission_line: expression | expression ',' mission_line {printf("Found line!");};
+
+expression: PARAM EQUAL val
 
 %%
 
