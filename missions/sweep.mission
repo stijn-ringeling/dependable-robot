@@ -1,8 +1,8 @@
 vel=0.1,edger=0 : dist=0.5
-label 2, tr=0, vel=0.1: turn=45
+label=2, tr=0, vel=0.1: turn=45
 tr=0.1, vel=0.1: turn=-45
 vel=-0.1:dist=0.1
-goto label 2: count 3
+goto=2: count=3
 tr=0.1, vel=0.1: turn=-35
 vel=0.1 : lv>5
 vel=0.1,acc=1,edger=0,white=1,event=7: dist = 0.5
