@@ -1,0 +1,5 @@
+vel=0.2, acc=1, white=1 : ir2<0.60
+vel=0.05, white=1 : ir2<0.3
+vel=0 : ir2 > 0.5
+vel=0 : time=1
+vel=0.4, acc=1.5,event=9, white=1: dist = 2
