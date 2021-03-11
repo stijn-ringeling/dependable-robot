@@ -1,8 +1,8 @@
 vel=0.3,acc=1,edger=0,white=1: xl > 13
 tr=0, vel=0.1:turn=90 
 vel=0.3,acc=1,edger=0,white=1: dist =2
-vel=0: ir>=1.4
-vel=0: ir<=0.6
-vel=0: ir>=1.4
+vel=0: ir2>1.4
+vel=0: ir2<0.6
+vel=0: ir2>1.4
 vel=0: time =5
-vel=0.4, event=8, acc=1.5, white=1: ir <20
+vel=0.4, event=8, acc=1.5, white=1: ir2 <20
