@@ -25,14 +25,13 @@ if (BISON_FOUND AND FLEX_FOUND)
 	FLEX_TARGET(MissionScanner "mission_parser/mission.l" ${CMAKE_SOURCE_DIR}/mission_parser/mission_lexer.c)
 	ADD_FLEX_BISON_DEPENDENCY(MissionScanner MissionParser)
 
+	set_source_files_properties(${FLEX_mission_parser_OUTPUTS} PROPERTIES COMPILE_FLAGS "-lfl")
+	add_executable(mission_parser ${BISON_MissionParser_OUTPUTS} ${FLEX_MissionScanner_OUTPUTS} "mission_parser/parser_test.cpp" uloader.cpp)
+	target_link_libraries(mission_parser ${FLEX_LIBRARIES})
+
 endif()
 
 add_executable(mission main.cpp urun.cpp ucamera.cpp ubridge.cpp umission.cpp utime.cpp tcpCase.cpp uevent.cpp ujoy.cpp uinfo.cpp umotor.cpp uedge.cpp upose.cpp uirdist.cpp uaccgyro.cpp uaruco.cpp ulibpose2pose.cpp ulib2dline.cpp ulibpose.cpp ulibposev.cpp uloader.cpp "mission_parser/mission_lexer.c")
-
-
-set_source_files_properties(${FLEX_mission_parser_OUTPUTS} PROPERTIES COMPILE_FLAGS "-lfl")
-add_executable(mission_parser ${BISON_MissionParser_OUTPUTS} ${FLEX_MissionScanner_OUTPUTS} "mission_parser/parser_test.cpp" uloader.cpp)
-target_link_libraries(mission_parser ${FLEX_LIBRARIES})
 #add_compile_options(mission_parser PUBLIC "-lfl" )
 
 
