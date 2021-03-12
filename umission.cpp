@@ -380,9 +380,9 @@ bool UMission::mission1(int & state)
       break;
     case 1:
       if (bridge->joy->button[BUTTON_GREEN]){
-        bridge->event->eventFlags[4] = true;
-        state = 22;
-        //state = 10;
+        //bridge->event->eventFlags[5] = true;
+        //state = 23;
+        state = 10;
       }
       break;
     case 10: // first PART - wait for IR2 then go fwd and turn
@@ -472,22 +472,48 @@ bool UMission::mission1(int & state)
         loader->loadMission("up_the_ramp.mission", lines, &linecount);
         bridge->event->isEventSet(7);
         sendAndActivateSnippet(lines,linecount);
-        state++;
         printf("# case=%d event 6 sensed - robot go up the rump and stop on flat surface\n",state);
+        state++;
       }
       break;
     case 25:
-        if(bridge->event->isEventSet(7)){
-          loader->loadMission("stop.mission", lines, &linecount);
-          bridge->event->isEventSet(3);
+      if(bridge->event->isEventSet(7)){
+        //go up the ramp
+        loader->loadMission("sweep.mission", lines, &linecount);
+        bridge->event->isEventSet(8);
+        sendAndActivateSnippet(lines,linecount);
+        printf("# case=%d event 7 sensed - start sweep\n",state);
+        state++;
+      }
+      break;
+    case 26:
+        if(bridge->event->isEventSet(8)){
+          loader->loadMission("place_second_ball.mission", lines, &linecount);
+          bridge->event->isEventSet(9);
           sendAndActivateSnippet(lines, linecount);
-          printf("@case=%d robot is on the plate -> stop mission\n",state);
-          state++;
-          printf("# case=%d event 6 sensed - robot is on the flat surface\n",state);
+          printf("@case=%d - event 8 sensed -> go to catch the second ball\n",state);
           state++;
         }
         break;
-    case 26:
+    case 27:
+        if(bridge->event->isEventSet(9)){
+          loader->loadMission("go_to_steps.mission", lines, &linecount);
+          bridge->event->isEventSet(10);
+          sendAndActivateSnippet(lines, linecount);
+          printf("@case=%d - event 9 sensed -> go to steps \n",state);
+          state++;
+        }
+        break;
+    case 28:
+        if(bridge->event->isEventSet(10)){
+          loader->loadMission("stop.mission", lines, &linecount);
+          bridge->event->isEventSet(3);
+          sendAndActivateSnippet(lines, linecount);
+          printf("@case=%d - event 10 sensed -> stop mission\n",state);
+          state++;
+        }
+        break;    
+    case 29:
       if(bridge->event->isEventSet(3)){
         state=999;
         printf("@case=%d robot stopped -> stop mission\n",state);

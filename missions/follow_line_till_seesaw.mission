@@ -1,6 +1,6 @@
-vel=0, edger=0: time=1
+vel=0, edger=0, white=1: time=1
 servo=2, pservo=900, vservo=0 : time=2
-vel=0.3,acc=1,edger=0,white=1: xl > 13
+vel=0.3,acc=1,edger=0,white=1: xl > 10
 tr=0, vel=0.1:turn=90 
-vel=0.3,acc=1,edgel=0,white=1,event=1:dist=1
+vel=0.3,acc=1,edgel=0,white=1,event=1:dist=1.13
 vel=0, acc=5, event=2:dist=1
