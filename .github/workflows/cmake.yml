@@ -19,7 +19,7 @@ jobs:
     
     - name: Install opencv
       # Install opencv build dependency. We will not install raspicam, since it is not a requirement
-      run: sudo apt-get install libopencv-dev
+      run: sudo apt-get update && sudo apt-get install libopencv-dev
 
     - name: Create Build Environment
       # Some projects don't allow in-source building, so create a separate build directory
