@@ -36,9 +36,11 @@ UMission::UMission(UBridge * regbot, UCamera * camera)
   // initialize line list to empty
   for (int i = 0; i < missionLineMax; i++)
   { // add to line list 
-    lines[i] = lineBuffer[i];    
+    lines[i] = lineBuffer[i];  
+    formatOutput[i] = formatOutputBuffer[i];
     // terminate c-strings strings - good practice, but not needed
     lines[i][0] = '\0';
+    formatOutput[i][0] = '\0';
   }
   //Create loader
   loader = new ULoader("./missions");

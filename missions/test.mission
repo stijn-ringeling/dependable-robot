@@ -1,4 +1,4 @@
-vel=0 : ir <0.3
+vel=0 : ir <0.2
 vel=0.3, acc=1: dist=0.6
 event=1, vel=0
 : dist=1
