@@ -155,6 +155,7 @@ void UMission::sendAndActivateSnippet(char ** missionLines, int missionLineCnt)
   { // send lines one at a time
     if (strlen((char*)missionLines[i]) > 0)
     { // send a modify line command
+        printf("Sending mission line: %s\n", missionLines[i]);
       snprintf(s, MSL, "<mod %d %d %s\n", threadToMod, i+1, missionLines[i]);
       bridge->send(s); 
     }
@@ -383,7 +384,7 @@ bool UMission::mission1(int & state)
         state = 10;
       break;
     case 10: // first PART - wait for IR2 then go fwd and turn
-      
+        return true; //Skip first mission
       loader->loadMission("test.mission", lines, &linecount);
       //snprintf(lines[0], MAX_LEN, "vel=0 : ir2 < 0.3");
       // drive straight 0.6m - keep an acceleration limit of 1m/s2 (until changed)
@@ -438,6 +439,7 @@ bool UMission::mission1(int & state)
 bool UMission::mission2(int & state)
 {
   bool finished = false;
+  return true; //Skip mission 2
   // First commands to send to robobot in given mission
   // (robot sends event 1 after driving 1 meter)):
   switch (state)
@@ -619,9 +621,41 @@ bool UMission::mission2(int & state)
 bool UMission::mission3(int & state)
 {
   bool finished = false;
+  int linecount = 0;
+  float v = 0.2; //driving speed
+  float wallD = 0.2; //Distance from wall to track
+  float wallThreshold = 0.5; //Threshold distance for wall tracking
+  
+  //Corner parameters
+  float L = 0.1; //Distance between center and wheel axels
+  float E = 0.285; //Length of extending piece of front door
+  float d = 0.20; //Distance from final position to box
+  float s = 0.20; //Distance from final position to door
+  float WB = 0.235; //Wheelbase
+  float sideToCenter = 0.04; //Distance from side IR sensor to center of wheelbase
+  float turnRadius = WB/2 + wallD-sideToCenter;//Turn radius
+  float cornerDistance = L; //Extra distance to drive after tracking wall
+  float turnAngle = -85; //90 degree turn
+  float upDist = L + s; //Distance to drive up after first turn
   switch (state)
   {
-    case 999:
+    case 0:
+    {
+        loader->loadMission("tunnel.mission", lines, &linecount);
+        float params[] = { v, wallD, wallThreshold, cornerDistance, turnRadius, turnAngle, upDist, d, WB/2 }; //Vel, wall tracking distance, wall tracking stop distance, extra distance, turn radius, turn angle
+        loader->formatMission(lines, formatOutput, linecount, params);
+        bridge->event->isEventSet(1);
+        sendAndActivateSnippet(formatOutput, linecount);
+        state++;
+        break;
+    }
+    case 1:
+    {
+        if (bridge->event->isEventSet(1)) {
+            finished = true;
+        }
+        break;
+    }
     default:
       printf("mission 3 ended\n");
       bridge->send("oled 5 mission 3 ended.");
