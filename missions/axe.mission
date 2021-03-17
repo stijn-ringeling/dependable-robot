@@ -1,5 +1,9 @@
-vel=0.2, acc=1, white=1 : ir2<0.60
-vel=0.05, white=1 : ir2<0.3
-vel=0 : ir2 > 0.5
-vel=0 : time=1
-vel=0.4, acc=1.5,event=9, white=1: dist = 2
+vel=0.3,acc=1,edger=0,white=1: xl > 8
+tr=0.1, vel=0.1:turn=-90
+vel=0.3,acc=1,edger=0,white=1: dist=2.1
+servo=2, pservo=900, vservo=0: time=1
+vel=0: ir2<0.50
+vel=0 : ir2>0.8
+vel=0 : time=0.5
+vel=1.5, acc=5,event=9, white=1, edger=0: ir2<0.45
+event=12,vel=0, acc=10: dist=1

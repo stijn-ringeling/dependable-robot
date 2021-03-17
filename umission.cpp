@@ -518,6 +518,34 @@ bool UMission::mission1(int & state)
         state=999;
         printf("@case=%d robot stopped -> stop mission\n",state);
       }
+      break;
+    case 30:
+      if (bridge->event->isEventSet(11)) {
+        loader->loadMission("roundabout.mission", lines, &linecount);
+        bridge->event->isEventSet(12);
+        sendAndActivateSnippet(lines, linecount);
+        printf("@case=%d - event 11 sensed -> roundabout mission\n", state);
+        state++;
+      }
+      break;
+    case 31:
+      if (bridge->event->isEventSet(12)) {
+        loader->loadMission("tunnel.mission", lines, &linecount);
+        bridge->event->isEventSet(13);
+        sendAndActivateSnippet(lines, linecount);
+        printf("@case=%d - event 12 sensed -> tunnel mission\n", state);
+        state++;
+      }
+      break;
+    case 32:
+      if (bridge->event->isEventSet(13)) {
+        loader->loadMission("axe.mission", lines, &linecount);
+        bridge->event->isEventSet(14);
+        sendAndActivateSnippet(lines, linecount);
+        printf("@case=%d - event 13 sensed -> axe mission\n", state);
+        state++;
+      }
+      break;
 
     case 999:
     default:
