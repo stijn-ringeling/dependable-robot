@@ -12,7 +12,8 @@ int main(int argc, char** argv)
     char* lines[20];
     char lineBuffer[20][100];
     char* output[20];
-    char outputBuffer[20][256];
+    char outputBuffer[20][100];
+
     for (int i = 0; i < 20; i++) {
         lines[i] = lineBuffer[i];
         output[i] = outputBuffer[i];
@@ -21,16 +22,28 @@ int main(int argc, char** argv)
     int lineCount;
     //lines[0] = "vel=%0";
     //lines[1] = "acc=%1";
-    float params[] = { 0.5, 1.5, 2.5 };
+    float v = 0.1; //driving speed
+    float wallD = 0.2; //Distance from wall to track
+    float wallThreshold = 0.5; //Threshold distance for wall tracking
+    float cornerDistance = 0.1; //Extra distance to drive after tracking wall
+    float turnRadius = wallD + 0.235 / 2;//Turn radius
+    float turnAngle = 85;
+    float params[] = { v, wallD, wallThreshold, cornerDistance, turnRadius, turnAngle };
 
     ULoader loader = ULoader("./missions");
 
-    loader.loadMission("parser_test.mission", lines, &lineCount);
+    loader.loadMission("tunnel.mission", lines, &lineCount);
 
     //char** output = ULoader::createOutput();
     ULoader::formatMission(lines, output, lineCount, params);
-    printf(output[0]);// printf("\n");
-    printf(output[1]);// printf("\n");
+    for (int i = 0; i < lineCount; i++) {
+        printf("%s", output[i]);
+    }
+    //printf(output[0]);// printf("\n");
+    //printf(output[1]);// printf("\n");
+    //printf("0: %d\n", strlen(output[0]));
+    //printf("1: %d\n", strlen(output[1]));
+
     //ULoader::freeOutput(output);
     /*int len = sizeof(char*) * 20 + sizeof(char) * 20 * 256;
     char** output;

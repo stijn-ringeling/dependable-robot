@@ -2,6 +2,8 @@
 It's job is to translate incoming data to tokens that can be used by the parser
 */
 %option yylineno
+%option caseless
+
 
 %{
 #include "mission_lexer.h"
@@ -35,7 +37,8 @@ int yywrap(){
 "vel"|"acc"|"log"|"tr"|"bal"|"head"|"topos"|"edgel"|"edger"|"white"|"irsensor"|"irdist"|"servo"|"pservo"|"vservo"|"label"|"goto"|"event" {return PARAM;}
 "=" {return EQUAL;}
 [0-9]+ {yylval = atoi(yytext); return INT;}
-[0-9]?\.[0-9]+ {yyfval = atoi(yytext); return FLOAT;}
+[0-9]\.[0-9]+ {yyfval = atof(yytext); return FLOAT;}
+
 [\n] {curr_col=0;return EOL;}
 [\t] {printf("Found whitespace");}
 . {return *yytext;}

@@ -155,6 +155,7 @@ void UMission::sendAndActivateSnippet(char ** missionLines, int missionLineCnt)
   { // send lines one at a time
     if (strlen((char*)missionLines[i]) > 0)
     { // send a modify line command
+        printf("Sending mission line: %s\n", missionLines[i]);
       snprintf(s, MSL, "<mod %d %d %s\n", threadToMod, i+1, missionLines[i]);
       bridge->send(s); 
     }
@@ -438,6 +439,7 @@ bool UMission::mission1(int & state)
 bool UMission::mission2(int & state)
 {
   bool finished = false;
+
   //Skip second mission
   return true;
   // First commands to send to robobot in given mission
@@ -623,11 +625,9 @@ bool UMission::mission3(int & state)
   bool finished = false;
   switch (state)
   {
-    case 999:
-    default:
-      printf("mission 3 ended\n");
-      bridge->send("oled 5 mission 3 ended.");
+  default:
       finished = true;
+      printf("mission 3 finished\n");
       break;
   }
   return finished;
@@ -642,17 +642,106 @@ bool UMission::mission3(int & state)
  * \returns true, when finished. */
 bool UMission::mission4(int & state)
 {
-  bool finished = false;
-  switch (state)
-  {
-    case 999:
+    bool finished = false;
+    int linecount = 0;
+    float v = 0.2; //driving speed
+    float wallD = 0.2; //Distance from wall to track
+    float wallThreshold = 0.5; //Threshold distance for wall tracking
+
+    //Corner parameters
+    float L = 0.1; //Distance between center and wheel axels
+    float E = 0.285; //Length of extending piece of front door
+    float d = 0.20; //Distance from final position to box
+    float s = 0.15; //Distance from final position to door
+    float WB = 0.235; //Wheelbase
+    float sideToCenter = 0.04; //Distance from side IR sensor to center of wheelbase
+    float turnRadius = WB / 2 + wallD - sideToCenter;//Turn radius
+    float cornerDistance = L; //Extra distance to drive after tracking wall
+    float turnAngle = -85; //90 degree turn
+    float upDist = L + s; //Distance to drive up after first turn
+    switch (state)
+    {
+    case 0:
+    {
+        loader->loadMission("tunnel_aproach.mission", lines, &linecount);
+        bridge->event->isEventSet(1);
+        sendAndActivateSnippet(lines, linecount);
+        state++;
+        break;
+    }
+    case 1:
+    {//Move next to tunnel
+        if (bridge->event->isEventSet(1)) {
+            loader->loadMission("tunnel.mission", lines, &linecount);
+            float params[] = { v, wallD + 0.05, wallThreshold, cornerDistance, turnRadius + 0.05, turnAngle, upDist, d, WB / 2 }; //Vel, wall tracking distance, wall tracking stop distance, extra distance, turn radius, turn angle
+            loader->formatMission(lines, formatOutput, linecount, params);
+            bridge->event->isEventSet(1);
+            sendAndActivateSnippet(formatOutput, linecount);
+            state++;
+        }
+
+        break;
+    }
+    case 2:
+    {//Open front door and go through tunnel
+        if (bridge->event->isEventSet(1)) {
+            loader->loadMission("tunnel_open.mission", lines, &linecount);
+            loader->clearOutput(formatOutput, 20);
+            float params[] = { turnAngle, d, WB / 2 };
+            loader->formatMission(lines, formatOutput, linecount, params);
+            bridge->event->isEventSet(2);
+            sendAndActivateSnippet(formatOutput, linecount);
+            state++;
+        }
+        break;
+    }
+    case 3:
+    {//Close front door
+        if (bridge->event->isEventSet(2)) {
+            loader->loadMission("tunnel_close.mission", lines, &linecount);
+            bridge->event->isEventSet(3);
+            sendAndActivateSnippet(lines, linecount);
+            state++;
+        }
+        break;
+    }
+    case 4:
+    {//Get next to tunnel. Same method as before
+        if (bridge->event->isEventSet(3)) {
+            loader->loadMission("tunnel.mission", lines, &linecount);
+            loader->clearOutput(formatOutput, 20);
+            float params[] = { v / 2, wallD, wallThreshold, cornerDistance - 0.1, turnRadius, turnAngle, 0.1, d, WB / 2 }; //Vel, wall tracking distance, wall tracking stop distance, extra distance, turn radius, turn angle
+            loader->formatMission(lines, formatOutput, linecount, params);
+            bridge->event->isEventSet(1);
+            sendAndActivateSnippet(formatOutput, linecount);
+            state++;
+        }
+        break;
+    }
+    case 5:
+    {//Close second door
+        if (bridge->event->isEventSet(1)) {
+            loader->loadMission("tunnel_close_second.mission", lines, &linecount);
+            bridge->event->isEventSet(4);
+            sendAndActivateSnippet(lines, linecount);
+            state++;
+        }
+        break;
+    }
+    case 6:
+    {
+        if (bridge->event->isEventSet(4)) {
+            state++;
+        }
+        break;
+    }
     default:
-      printf("mission 4 ended\n");
-      bridge->send("oled 5 mission 4 ended.");
-      finished = true;
-      break;
-  }
-  return finished;
+        printf("mission 4 ended\n");
+        bridge->send("oled 5 mission 3 ended.");
+        finished = true;
+        break;
+    }
+    return finished;
 }
 
 

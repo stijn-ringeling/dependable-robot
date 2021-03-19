@@ -1,0 +1,9 @@
+tr=0,vel=0.1:turn=%0
+vel=0.2: ir2<%1
+servo=2,pservo=450,vservo=600,tr=%2,vel=0.1:turn=%0
+servo=2,pservo=450,vservo=0
+tr=0.68,vel=0.2:xl>10,turn=180
+servo=02,pservo=900, vel=0: time=0.5
+tr=0.05,vel=0.1: turn=100
+edger=0,white=1,vel=0.3:ir1>0.5
+event=2,vel=0:dist=1
