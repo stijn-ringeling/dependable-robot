@@ -1,0 +1,11 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../../rpi/mission/build/missions"
+		}
+	],
+	"settings": {}
+}
