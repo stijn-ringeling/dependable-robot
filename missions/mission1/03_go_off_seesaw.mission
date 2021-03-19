@@ -3,7 +3,8 @@ vel=0:time=2
 vel=0.1 : dist=-0.1
 vel=0.1 : dist=0.1
 vel=0 : time=3
+servo=2, pservo=-120, vservo=0
 vel=0.3, acc=1, edger=0, white=1 : lv < 5
-vel=0.3, acc=1 : dist=1
-tr=0, vel=0.1: turn=-85
+vel=0.3, acc=1 : dist=1.3
+tr=0, vel=0.1: turn=-80
 event=4, vel=0 : dist=1

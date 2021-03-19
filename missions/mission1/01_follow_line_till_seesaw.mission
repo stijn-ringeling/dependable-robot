@@ -1,6 +1,6 @@
-vel=0, edger=0, white=1: time=0.5
-vel=0.1, edger=0, white=1: dist=0.1
-servo=2, pservo=900, vservo=0 : time=2
+servo=2, pservo=900, vservo=0 : time=1
+vel=0, edger=0, white=1: time=1
+vel=0.1, edger=0, white=1: dist=0.2
 vel=0.3,acc=1,edger=0,white=1: xl > 10
 tr=0, vel=0.1:turn=90 
 vel=0.3,acc=1,edgel=0,white=1,event=1:dist=1.13

@@ -1,10 +1,7 @@
-servo=2, pservo=900, vservo=0: time=1
-
+vel=0, servo=2, pservo=900, vservo=0: time=1
 tr=0, vel=0.2: turn=-100
+vel=0.3, acc=1:dist=0.2
 vel=0.3, acc=1 : lv>5
 tr=0, vel=0.2: turn=-90
-
 vel=0.2, edger=0, white=1 : dist=0.2
-
-vel=0, acc=10: dist=1
 event=10, vel=0 : dist=1
