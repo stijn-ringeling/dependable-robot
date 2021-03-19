@@ -4,6 +4,7 @@ It's job is to translate incoming data to tokens that can be used by the parser
 %option yylineno
 %option caseless
 
+
 %{
 #include "mission_lexer.h"
 #include "mission_parser.h"
@@ -37,6 +38,7 @@ int yywrap(){
 "=" {return EQUAL;}
 [0-9]+ {yylval = atoi(yytext); return INT;}
 [0-9]\.[0-9]+ {yyfval = atof(yytext); return FLOAT;}
+
 [\n] {curr_col=0;return EOL;}
 [\t] {printf("Found whitespace");}
 . {return *yytext;}

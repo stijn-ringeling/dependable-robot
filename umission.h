@@ -62,6 +62,7 @@ private:
   /** definition of array with c-strings for the mission snippets */
   char lineBuffer[missionLineMax][MAX_LEN];
   char formatOutputBuffer[missionLineMax][MAX_LEN];
+
   /** an array of pointers to mission lines */
   char * lines[missionLineMax];
   char* formatOutput[missionLineMax];

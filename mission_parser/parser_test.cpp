@@ -13,6 +13,7 @@ int main(int argc, char** argv)
     char lineBuffer[20][100];
     char* output[20];
     char outputBuffer[20][100];
+
     for (int i = 0; i < 20; i++) {
         lines[i] = lineBuffer[i];
         output[i] = outputBuffer[i];
@@ -42,6 +43,7 @@ int main(int argc, char** argv)
     //printf(output[1]);// printf("\n");
     //printf("0: %d\n", strlen(output[0]));
     //printf("1: %d\n", strlen(output[1]));
+
     //ULoader::freeOutput(output);
     /*int len = sizeof(char*) * 20 + sizeof(char) * 20 * 256;
     char** output;

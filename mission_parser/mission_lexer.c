@@ -380,19 +380,20 @@ struct yy_trans_info
 	flex_int32_t yy_verify;
 	flex_int32_t yy_nxt;
 	};
+
 static const flex_int16_t yy_accept[94] =
     {   0,
         0,    0,   12,   10,    9,    8,   10,   10,    6,    5,
        10,   10,   10,   10,   10,   10,   10,   10,   10,   10,
        10,   10,    1,    7,    0,    6,    0,    0,    0,    0,
         0,    0,    0,    0,    0,    0,    0,    0,    0,    4,
+
         0,    0,    0,    4,    4,    0,    0,    0,    0,    0,
         0,    0,    4,    0,    0,    0,    0,    4,    0,    0,
         0,    0,    4,    4,    0,    0,    0,    0,    0,    0,
         0,    0,    0,    4,    4,    3,    0,    0,    4,    0,
         4,    0,    4,    0,    4,    4,    0,    4,    2,    4,
         0,    4,    0
-
     } ;
 
 static const YY_CHAR yy_ec[256] =
@@ -426,7 +427,6 @@ static const YY_CHAR yy_ec[256] =
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1
     } ;
-
 static const YY_CHAR yy_meta[42] =
     {   0,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
@@ -548,6 +548,7 @@ char *yytext;
 It's job is to translate incoming data to tokens that can be used by the parser
 */
 #line 8 "mission_parser/mission.l"
+
 #include "mission_lexer.h"
 #include "mission_parser.h"
 int yylval, lineCount;
@@ -572,6 +573,7 @@ int yywrap(){
 
 #line 574 "/mnt/d/buildin_dependable_robots/src/regbot/mission/mission_parser/mission_lexer.c"
 #line 575 "/mnt/d/buildin_dependable_robots/src/regbot/mission/mission_parser/mission_lexer.c"
+
 
 #define INITIAL 0
 
@@ -792,6 +794,7 @@ YY_DECL
 
 #line 794 "/mnt/d/buildin_dependable_robots/src/regbot/mission/mission_parser/mission_lexer.c"
 
+
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
 		yy_cp = (yy_c_buf_p);
@@ -860,11 +863,13 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 YY_RULE_SETUP
 #line 33 "mission_parser/mission.l"
+
 {yyfval = params[atoi(yytext+1)]; return FLOAT;}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
 #line 34 "mission_parser/mission.l"
+
 {return THREAD;}
 	YY_BREAK
 case 3:
@@ -875,21 +880,25 @@ YY_RULE_SETUP
 case 4:
 YY_RULE_SETUP
 #line 36 "mission_parser/mission.l"
+
 {return PARAM;}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
 #line 37 "mission_parser/mission.l"
+
 {return EQUAL;}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
 #line 38 "mission_parser/mission.l"
+
 {yylval = atoi(yytext); return INT;}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
 #line 39 "mission_parser/mission.l"
+
 {yyfval = atoi(yytext); return FLOAT;}
 	YY_BREAK
 case 8:
@@ -914,6 +923,7 @@ YY_RULE_SETUP
 ECHO;
 	YY_BREAK
 #line 917 "/mnt/d/buildin_dependable_robots/src/regbot/mission/mission_parser/mission_lexer.c"
+
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1243,6 +1253,7 @@ static int yy_get_next_buffer (void)
 		}
 	yy_current_state = yy_nxt[yy_base[yy_current_state] + yy_c];
 	yy_is_jam = (yy_current_state == 93);
+
 
 		return yy_is_jam ? 0 : yy_current_state;
 }
@@ -1931,6 +1942,7 @@ void yyfree (void * ptr )
 #define YYTABLES_NAME "yytables"
 
 #line 44 "mission_parser/mission.l"
+
 
 
 void format_mission(char* input_lines[], char** output_lines, int maxLines, float* parameters){

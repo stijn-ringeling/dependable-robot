@@ -53,6 +53,7 @@ void ULoader::loadMission(char* filename, char** lines, int* lineCount) {
 void ULoader::clearOutput(char** output, int lines) {
 	for (int i = 0; i < lines; i++) {
 		output[i][0] = '\0';
+
 	}
 }
 
