@@ -11,5 +11,4 @@ servo=2,pservo=500,vel=0:time=2
 servo=2,pservo=900:time=0.5
 tr=0.0,vel=0.1: turn=170
 edger=0,white=1,vel=0.3: dist=0.2
-edger=0,white=1,vel=0.2: xl>10
 event=4, vel=0: dist=1

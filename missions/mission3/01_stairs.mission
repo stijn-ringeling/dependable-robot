@@ -1,10 +1,10 @@
 edger=0, white=1 : time=1
 vel = 0.1,acc=1,edger=0,white=1:dist = 0.1
 servo=2, pservo=0
-vel = 0.1,acc=1, edger=0, white=1:dist = 0.4
+vel = 0.1,acc=1, edger=0, white=1:dist = 0.3
 vel = -0.3,acc=1:dist = 0.3
 label=2
 vel = 0.1,acc=1,edger=0.5,white=1:dist = 0.45
 vel = -0.3,acc=1:dist = 0.1
 goto=2:count=3
-event=1
+event=1, servo=2, pservo=900, vservo=0

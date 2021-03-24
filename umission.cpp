@@ -187,6 +187,7 @@ void UMission::sendAndActivateSnippet(char ** missionLines, int missionLineCnt)
 void UMission::runMission()
 { /// current mission number
   mission = fromMission;
+  //mission = 4;
   int missionOld = mission;
   bool regbotStarted = false;
   /// end flag for current mission
@@ -678,10 +679,15 @@ bool UMission::mission4(int & state)
     {//Move next to tunnel
         if (bridge->event->isEventSet(1)) {
             loader->loadMission("02_tunnel.mission", lines, &linecount);
+            printf("End load mission\n");
             float params[] = { v, wallD + 0.05, wallThreshold, cornerDistance, turnRadius + 0.05, turnAngle, upDist, d, WB / 2 }; //Vel, wall tracking distance, wall tracking stop distance, extra distance, turn radius, turn angle
+            printf("Start formatting mission\n");
             loader->formatMission(lines, formatOutput, linecount, params);
+            printf("Formatting mission end\n");
             bridge->event->isEventSet(1);
+            printf("Event 1 set\n");
             sendAndActivateSnippet(formatOutput, linecount);
+            printf("mission sent\n");
             state++;
         }
 
@@ -746,11 +752,20 @@ bool UMission::mission4(int & state)
     case 7:
     {
         if (bridge->event->isEventSet(5)) {
-            printf("Axe completed!");
-            state++;
+          loader->loadMission("07_go_home.mission", lines, &linecount);
+          bridge->event->isEventSet(6);
+          sendAndActivateSnippet(lines, linecount);
+          printf("Axe completed! Go home\n");
+          state++;
         }
         break;
     }
+    case 8:
+      if(bridge->event->isEventSet(6)){
+        printf("Reached GOAL\n");
+        state++;
+      }
+      break;
     default:
         printf("mission 4 ended\n");
         bridge->send("oled 5 mission 4 ended.");
