@@ -68,6 +68,9 @@ private:
   char* formatOutput[missionLineMax];
   /** logfile for mission state */
   FILE * logMission = NULL;
+
+  bool lastLB = false;
+  bool lastRB = false;
   
 public:
   /**

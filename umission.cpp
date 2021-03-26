@@ -27,6 +27,7 @@
 #include "utime.h"
 #include "ulibpose2pose.h"
 
+#define SEESAW_TILT 150
 
 UMission::UMission(UBridge * regbot, UCamera * camera)
 {
@@ -186,6 +187,7 @@ void UMission::sendAndActivateSnippet(char ** missionLines, int missionLineCnt)
 void UMission::runMission()
 { /// current mission number
   mission = fromMission;
+  //mission = 4;
   int missionOld = mission;
   bool regbotStarted = false;
   /// end flag for current mission
@@ -316,12 +318,42 @@ void UMission::runMission()
     // see also "ujoy.h"
     if (bridge->joy->button[BUTTON_RED])
     { // red button -> save image
-      if (not cam->saveImage)
-      {
-        printf("UMission::runMission:: button 1 (red) pressed -> save image\n");
-        cam->saveImage = true;
-      }
+        if (inManual) {
+            missionState = 0;
+            printf("Manual mode: Resetting state to zero.\n");
+        }
+        else {
+            printf("Tried resetting state, but not in manual mode.\n");
+        }
     }
+    if (bridge->joy->button[BUTTON_LB] && !lastLB) {
+        if (inManual) {
+            mission--;
+            missionState = 0;
+            if (mission < this->fromMission) {
+                mission = this->fromMission;
+            }
+            printf("Switched to mission %d\n", mission);
+        }
+        else {
+            printf("Tried to decrease mission, but not in manual mode\n");
+        }
+    }
+    lastLB = bridge->joy->button[BUTTON_LB];
+    if (bridge->joy->button[BUTTON_LR] && !lastRB) {
+        if (inManual) {
+            mission++;
+            missionState = 0;
+            if (mission > this->toMission) {
+                mission = this->toMission;
+            }
+            printf("Switched to mission %d\n", mission);
+        }
+        else {
+            printf("Tried to increase mission, but not in manual mode\n");
+        }
+    }
+    lastRB = bridge->joy->button[BUTTON_LR];
     if (bridge->joy->button[BUTTON_YELLOW])
     { // yellow button -> make ArUco analysis
       if (not cam->doArUcoAnalysis)
@@ -367,6 +399,7 @@ bool UMission::mission1(int & state)
 {
   bool finished = false;
   int linecount = 0;
+  float tilt = 0.0;
   // First commands to send to robobot in given mission
   // (robot sends event 1 after driving 1 meter)):
   switch (state)
@@ -380,46 +413,65 @@ bool UMission::mission1(int & state)
       state++;
       break;
     case 1:
-      if (bridge->joy->button[BUTTON_GREEN])
+      if (bridge->joy->button[BUTTON_GREEN]){
+        //bridge->event->eventFlags[5] = true;
+        //state = 23;
         state = 10;
+      }
       break;
     case 10: // first PART - wait for IR2 then go fwd and turn
       
-      loader->loadMission("follow_line.mission", lines, &linecount);
-      //snprintf(lines[0], MAX_LEN, "vel=0 : ir2 < 0.3");
-      // drive straight 0.6m - keep an acceleration limit of 1m/s2 (until changed)
-      //snprintf(lines[1], MAX_LEN, "vel=0.2,acc=1:dist=0.6");
-      // stop and create an event when arrived at this line
-      //snprintf(lines[2], MAX_LEN, "event=1, vel=0");
-      // add a line, so that the robot is occupied until next snippet has arrived
-      //snprintf(lines[3], MAX_LEN, ": dist=1");
-      // send the 4 lines to the REGBOT
+      loader->loadMission("01_follow_line_till_seesaw.mission", lines, &linecount);
       sendAndActivateSnippet(lines, linecount);
-      // make sure event 1 is cleared
+      //clear event 1
       bridge->event->isEventSet(1);
       // tell the operator
-      printf("# case=%d sent mission snippet 1\n", state);
-//       system("espeak \"code snippet 1.\" -ven+f4 -s130 -a5 2>/dev/null &"); 
+      printf("# case=%d sent mission snippet 1 -> go to the seesaw\n", state);
+      //system("espeak \"code snippet 1.\" -ven+f4 -s130 -a5 2>/dev/null &"); 
       play.say("Code snippet 1.", 90);
       bridge->send("oled 5 code snippet 1");
       //
       // play as we go
       play.setFile("../The_thing_goes_Bassim.mp3");
-      play.setVolume(80); // % (0..100)
+      play.setVolume(100); // % (0..100)
       play.start();
       // go to wait for finished
       state = 11;
-      featureCnt = 0;
       break;
     case 11:
-      // wait for event 1 (send when finished driving first part)
+      // wait until the robot reach the crossing line -> event=1 set
       if (bridge->event->isEventSet(1))
       { // finished first drive
-        state = 999;
+        bridge->event->isEventSet(2);
+        state++;
+        printf("# case=%d event 1 sensed -> robot at the crossing line\n", state);
         play.stopPlaying();
       }
       break;
-    case 999:
+    case 12:
+      // wait for event 2 -> catch the ball
+      // bridge->imu->gyro[0]  Rotation velocity around x-axis [degree/sec]
+      // bridge->imu->gyro[1]  y-axis
+      // bridge->imu->gyro[2]  z-axis
+      if(bridge->event->isEventSet(2)){ //condition of stop
+        // load stop mission and send it to the RoboBot
+        printf("# case=%d event 2 sensed - stop and catch the ball\n",state);
+        loader->loadMission("02_catch_ball.mission", lines, &linecount);
+        bridge->event->isEventSet(3);
+        sendAndActivateSnippet(lines, linecount);
+
+        state = 21;
+      } 
+      break;
+    case 21:
+      if (bridge->event->isEventSet(3)){
+        loader->loadMission("03_go_off_seesaw.mission", lines, &linecount);
+        bridge->event->isEventSet(4);
+        sendAndActivateSnippet(lines, linecount);
+        printf("# case=%d event 3 sensed -> roobt go off the seesaw turning toward the direction to the ramp");
+        state++;
+      }
+      break;
     default:
       printf("mission 1 ended \n");
       bridge->send("oled 5 \"mission 1 ended.\"");
@@ -431,7 +483,7 @@ bool UMission::mission1(int & state)
 
 
 /**
- * Run mission
+ * Run mission1: follow line sinse the crossing line, follow left line until the seesaw tilt
  * \param state is kept by caller, but is changed here
  *              therefore defined as reference with the '&'.
  *              State will be 0 at first call.
@@ -439,9 +491,9 @@ bool UMission::mission1(int & state)
 bool UMission::mission2(int & state)
 {
   bool finished = false;
-
+  int linecount = 0;
   //Skip second mission
-  return true;
+  //return true;
   // First commands to send to robobot in given mission
   // (robot sends event 1 after driving 1 meter)):
   switch (state)
@@ -450,160 +502,95 @@ bool UMission::mission2(int & state)
       // tell the operatior what to do
       printf("# started mission 2.\n");
 //       system("espeak \"looking for ArUco\" -ven+f4 -s130 -a5 2>/dev/null &"); 
-      play.say("Looking for ArUco.", 90);
-      bridge->send("oled 5 looking 4 ArUco");
+      play.say("Mission 2 - bring ball in the hole", 90);
+      bridge->send("oled 5 mission 2 started");
       state=11;
       break;
     case 11:
-      // wait for finished driving first part)
-      if (fabsf(bridge->motor->getVelocity()) < 0.001 and bridge->imu->turnrate() < (2*180/M_PI))
-      { // finished first drive and turnrate is zero'ish
-        state = 12;
-        // wait further 30ms - about one camera frame at 30 FPS
-        usleep(35000);
-        // start aruco analysis 
-        printf("# started new ArUco analysis\n");
-        cam->arUcos->setNewFlagToFalse();
-        cam->doArUcoAnalysis = true;
+      if (bridge->event->isEventSet(4)){
+        loader->loadMission("01_drive_until_ramp.mission", lines, &linecount);
+        bridge->event->isEventSet(5);
+        sendAndActivateSnippet(lines, linecount);
+        printf("# case=%d event 4 sensed -> drive until the second crossing line");
+        state++;
       }
       break;
     case 12:
-      if (not cam->doArUcoAnalysis)
-      { // aruco processing finished
-        if (cam->arUcos->getMarkerCount(true) > 0)
-        { // found a marker - go to marker (any marker)
-          state = 30;
-          // tell the operator
-          printf("# case=%d found marker\n", state);
-//           system("espeak \"found marker.\" -ven+f4 -s130 -a5 2>/dev/null &"); 
-          play.say("Found ArUco marker.", 90);
-          bridge->send("oled 5 found marker");
-        }
-        else
-        { // turn a bit (more)
-          state = 20;
-        }
+      if(bridge->event->isEventSet(5)){
+        //go up the ramp
+        loader->loadMission("02_move_to_the_ramp.mission", lines, &linecount);
+        bridge->event->isEventSet(6);
+        sendAndActivateSnippet(lines,linecount);
+        printf("# case=%d event 5 sensed - robot go up the rump for 1m\n",state);
+        state++;
       }
       break;
-    case 20: 
-      { // turn a bit and then look for a marker again
-        int line = 0;
-        snprintf(lines[line++], MAX_LEN, "vel=0.25, tr=0.15: turn=10,time=10");
-        snprintf(lines[line++], MAX_LEN, "vel=0,event=2:dist=1");
-        sendAndActivateSnippet(lines, line);
-        // make sure event 2 is cleared
-        bridge->event->isEventSet(2);
-        // tell the operator
-        printf("# case=%d sent mission turn a bit\n", state);
-        system("espeak \"turn.\" -ven+f4 -s130 -a5 2>/dev/null &"); 
-        bridge->send("oled 5 code turn a bit");
-        state = 21;
+    case 13:
+      if(bridge->event->isEventSet(6)){
+        //go up the ramp
+        loader->loadMission("03_up_the_ramp.mission", lines, &linecount);
+        bridge->event->isEventSet(7);
+        sendAndActivateSnippet(lines,linecount);
+        printf("# case=%d event 6 sensed - robot go up the rump and stop on flat surface\n",state);
+        state++;
+      }
+      break;
+    case 14:
+      if(bridge->event->isEventSet(7)){
+        //go up the ramp
+        loader->loadMission("04_sweep.mission", lines, &linecount);
+        bridge->event->isEventSet(8);
+        sendAndActivateSnippet(lines,linecount);
+        printf("# case=%d event 7 sensed - go to the hole and start sweeping\n",state);
+        state++;
+      }
+      break;
+    case 15:
+        if(bridge->event->isEventSet(8)){
+          loader->loadMission("05_grab_second_ball.mission", lines, &linecount);
+          bridge->event->isEventSet(1);
+          sendAndActivateSnippet(lines, linecount);
+          printf("@case=%d - event 8 sensed -> go to catch the second ball\n",state);
+          state++;
+        }
         break;
-      }
-    case 21: // wait until manoeuvre has finished
-      if (bridge->event->isEventSet(2))
-      {// repeat looking (until all 360 degrees are tested)
-        if (featureCnt < 36)
-          state = 11;
-        else
-          state = 999;
-        featureCnt++;
+    case 16:
+      if(bridge->event->isEventSet(1)){
+        loader->loadMission("06_place_second_ball.mission", lines, &linecount);
+        bridge->event->isEventSet(9);
+        sendAndActivateSnippet(lines, linecount);
+        printf("@case=%d - go to place the second ball\n",state);
+        state++;
       }
       break;
-    case 30:
-      { // found marker
-        // if stop marker, then exit
-        ArUcoVal * v = cam->arUcos->getID(6);
-        if (v != NULL and v->isNew)
-        { // sign to stop
-          state = 999;
-          break;
+    case 17:
+        if(bridge->event->isEventSet(9)){
+          loader->loadMission("07_go_to_steps.mission", lines, &linecount);
+          bridge->event->isEventSet(10);
+          sendAndActivateSnippet(lines, linecount);
+          printf("@case=%d - event 9 sensed -> go to steps \n",state);
+          state++;
         }
-        // use the first (assumed only one)
-        v = cam->arUcos->getFirstNew();
-        v->lock.lock();
-        // marker position in robot coordinates
-        float xm = v->markerPosition.at<float>(0,0);
-        float ym = v->markerPosition.at<float>(0,1);
-        float hm = v->markerAngle;
-        // stop some distance in front of marker
-        float dx = 0.3; // distance to stop in front of marker
-        float dy = 0.0; // distance to the left of marker
-        xm += - dx*cos(hm) + dy*sin(hm);
-        ym += - dx*sin(hm) - dy*cos(hm);
-        // limits
-        float acc = 1.0; // max allowed acceleration - linear and turn
-        float vel = 0.3; // desired velocity
-        // set parameters
-        // end at 0 m/s velocity
-        UPose2pose pp4(xm, ym, hm, 0.0);
-        printf("\n");
-        // calculate turn-straight-turn (Angle-Line-Angle)  manoeuvre
-        bool isOK = pp4.calculateALA(vel, acc);
-        // use only if distance to destination is more than 3cm
-        if (isOK and (pp4.movementDistance() > 0.03))
-        { // a solution is found - and more that 3cm away.
-          // debug print manoeuvre details
-          pp4.printMan();
-          printf("\n");
-          // debug end
-          int line = 0;
-          if (pp4.initialBreak > 0.01)
-          { // there is a starting straight part
-            snprintf(lines[line++], MAX_LEN, "vel=%.3f,acc=%.1f :dist=%.3f", 
-                     pp4.straightVel, acc, pp4.straightVel);
-          }
-          snprintf(lines[line++], MAX_LEN,   "vel=%.3f,tr=%.3f :turn=%.1f", 
-                   pp4.straightVel, pp4.radius1, pp4.turnArc1 * 180 / M_PI);
-          snprintf(lines[line++], MAX_LEN,   ":dist=%.3f", pp4.straightDist);
-          snprintf(lines[line++], MAX_LEN,   "tr=%.3f :turn=%.1f", 
-                   pp4.radius2, pp4.turnArc2 * 180 / M_PI);
-          if (pp4.finalBreak > 0.01)
-          { // there is a straight break distance
-            snprintf(lines[line++], MAX_LEN,   "vel=0 : time=%.2f", 
-                     sqrt(2*pp4.finalBreak));
-          }
-          snprintf(lines[line++], MAX_LEN,   "vel=0, event=2: dist=1");
-          sendAndActivateSnippet(lines, line);
-          // make sure event 2 is cleared
-          bridge->event->isEventSet(2);
-          //
-          // debug
-          for (int i = 0; i < line; i++)
-          { // print sent lines
-            printf("# line %d: %s\n", i, lines[i]);
-          }
-          // debug end
-          // tell the operator
-          printf("# Sent mission snippet to marker (%d lines)\n", line);
-          //system("espeak \"code snippet to marker.\" -ven+f4 -s130 -a20 2>/dev/null &"); 
-          bridge->send("oled 5 code to marker");
-          // wait for movement to finish
-          state = 31;
+        break;
+    case 18:
+        if(bridge->event->isEventSet(10)){
+          //loader->loadMission("stop.mission", lines, &linecount);
+          //bridge->event->isEventSet(3);
+          //sendAndActivateSnippet(lines, linecount);
+          //printf("@case=%d - event 10 sensed -> stop mission\n",state);
+          state++;
         }
-        else
-        { // no marker or already there
-          printf("# No need to move, just %.2fm, frame %d\n", 
-                 pp4.movementDistance(), v->frameNumber);
-          // look again for marker
-          state = 11;
-        }
-        v->lock.unlock();
-      }
-      break;
-    case 31:
-      // wait for event 2 (send when finished driving)
-      if (bridge->event->isEventSet(2))
-      { // look for next marker
-        state = 11;
-        // no, stop
-        state = 999;
-      }
-      break;
+        break;    
+    case 19:
+      //if(bridge->event->isEventSet(3)){
+        state=999;
+        //printf("@case=%d robot stopped -> stop mission\n",state);
+      //}
+
     case 999:
     default:
-      printf("mission 1 ended \n");
-      bridge->send("oled 5 \"mission 1 ended.\"");
+      printf("mission 2 ended \n");
+      bridge->send("oled 5 \"mission 2 ended.\"");
       finished = true;
       play.stopPlaying();
       break;
@@ -623,13 +610,62 @@ bool UMission::mission2(int & state)
 bool UMission::mission3(int & state)
 {
   bool finished = false;
+  int linecount = 0;
   switch (state)
   {
-  default:
+    case 0:
+      printf("# started mission 3.\n");
+      play.say("Mission 3 - climb down stairs", 90);
+      bridge->send("oled 5 mission 3 started");
+      state=11;
+      break;
+    case 11:
+      loader->loadMission("01_stairs.mission", lines, &linecount);
+      bridge->event->isEventSet(1);
+      sendAndActivateSnippet(lines, linecount);
+      printf("# case=%d START STAIRS", state);
+      state = 20;
+      
+      break;   
+    case 20:
+      if(bridge->event->isEventSet((1))){
+        loader->loadMission("02_roundabout.mission", lines, &linecount);
+        bridge->event->isEventSet(2);
+        sendAndActivateSnippet(lines, linecount);
+        printf("# case=%d event 1 sensed -> stairs done - go to roundabout", state);
+        //state++;
+        state++;
+      }
+      break;
+    case 21:
+    if(bridge->event->isEventSet((2))){
+        printf("# case=%d event 2 sensed -> roundabout done", state);
+        //state++;
+        state = 999;
+      }
+      break;
+    case 22:
+      loader->loadMission("stop.mission", lines, &linecount);
+      bridge->event->isEventSet(3);
+      sendAndActivateSnippet(lines, linecount);
+      printf("# case=%d  STOP MISSION", state);
+      state++;
+      break;
+    case 23:
+      if(bridge->event->isEventSet(3)){
+        state=999;
+        printf("@case=%d robot stopped\n",state);
+      }
+
+    case 999:
+    default:
+      printf("mission 3 ended \n");
+      bridge->send("oled 5 \"mission 3 ended.\"");
       finished = true;
-      printf("mission 3 finished\n");
+      play.stopPlaying();
       break;
   }
+  // printf("# mission1 return (state=%d, finished=%d, )\n", state, finished);
   return finished;
 }
 
@@ -663,7 +699,7 @@ bool UMission::mission4(int & state)
     {
     case 0:
     {
-        loader->loadMission("tunnel_aproach.mission", lines, &linecount);
+        loader->loadMission("01_tunnel_aproach.mission", lines, &linecount);
         bridge->event->isEventSet(1);
         sendAndActivateSnippet(lines, linecount);
         state++;
@@ -672,11 +708,16 @@ bool UMission::mission4(int & state)
     case 1:
     {//Move next to tunnel
         if (bridge->event->isEventSet(1)) {
-            loader->loadMission("tunnel.mission", lines, &linecount);
+            loader->loadMission("02_tunnel.mission", lines, &linecount);
+            printf("End load mission\n");
             float params[] = { v, wallD + 0.05, wallThreshold, cornerDistance, turnRadius + 0.05, turnAngle, upDist, d, WB / 2 }; //Vel, wall tracking distance, wall tracking stop distance, extra distance, turn radius, turn angle
+            printf("Start formatting mission\n");
             loader->formatMission(lines, formatOutput, linecount, params);
+            printf("Formatting mission end\n");
             bridge->event->isEventSet(1);
+            printf("Event 1 set\n");
             sendAndActivateSnippet(formatOutput, linecount);
+            printf("mission sent\n");
             state++;
         }
 
@@ -685,7 +726,7 @@ bool UMission::mission4(int & state)
     case 2:
     {//Open front door and go through tunnel
         if (bridge->event->isEventSet(1)) {
-            loader->loadMission("tunnel_open.mission", lines, &linecount);
+            loader->loadMission("03_tunnel_open.mission", lines, &linecount);
             loader->clearOutput(formatOutput, 20);
             float params[] = { turnAngle, d, WB / 2 };
             loader->formatMission(lines, formatOutput, linecount, params);
@@ -698,7 +739,7 @@ bool UMission::mission4(int & state)
     case 3:
     {//Close front door
         if (bridge->event->isEventSet(2)) {
-            loader->loadMission("tunnel_close.mission", lines, &linecount);
+            loader->loadMission("04_tunnel_close.mission", lines, &linecount);
             bridge->event->isEventSet(3);
             sendAndActivateSnippet(lines, linecount);
             state++;
@@ -708,7 +749,7 @@ bool UMission::mission4(int & state)
     case 4:
     {//Get next to tunnel. Same method as before
         if (bridge->event->isEventSet(3)) {
-            loader->loadMission("tunnel.mission", lines, &linecount);
+            loader->loadMission("02_tunnel.mission", lines, &linecount);
             loader->clearOutput(formatOutput, 20);
             float params[] = { v / 2, wallD, wallThreshold, cornerDistance - 0.1, turnRadius, turnAngle, 0.1, d, WB / 2 }; //Vel, wall tracking distance, wall tracking stop distance, extra distance, turn radius, turn angle
             loader->formatMission(lines, formatOutput, linecount, params);
@@ -721,7 +762,7 @@ bool UMission::mission4(int & state)
     case 5:
     {//Close second door
         if (bridge->event->isEventSet(1)) {
-            loader->loadMission("tunnel_close_second.mission", lines, &linecount);
+            loader->loadMission("05_tunnel_close_second.mission", lines, &linecount);
             bridge->event->isEventSet(4);
             sendAndActivateSnippet(lines, linecount);
             state++;
@@ -731,13 +772,33 @@ bool UMission::mission4(int & state)
     case 6:
     {
         if (bridge->event->isEventSet(4)) {
+            loader->loadMission("06_axe.mission", lines, &linecount);
+            bridge->event->isEventSet(5);
+            sendAndActivateSnippet(lines, linecount);
             state++;
         }
         break;
     }
+    case 7:
+    {
+        if (bridge->event->isEventSet(5)) {
+          loader->loadMission("07_go_home.mission", lines, &linecount);
+          bridge->event->isEventSet(6);
+          sendAndActivateSnippet(lines, linecount);
+          printf("Axe completed! Go home\n");
+          state++;
+        }
+        break;
+    }
+    case 8:
+      if(bridge->event->isEventSet(6)){
+        printf("Reached GOAL\n");
+        state++;
+      }
+      break;
     default:
         printf("mission 4 ended\n");
-        bridge->send("oled 5 mission 3 ended.");
+        bridge->send("oled 5 mission 4 ended.");
         finished = true;
         break;
     }

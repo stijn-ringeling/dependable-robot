@@ -35,7 +35,7 @@ add_executable(mission main.cpp urun.cpp ucamera.cpp ubridge.cpp umission.cpp ut
 #add_compile_options(mission_parser PUBLIC "-lfl" )
 
 
-file(GLOB MISSIONS "missions/*")
+file(GLOB_RECURSE MISSIONS "missions/*")
 file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/missions")
 foreach(file ${MISSIONS})
 	message("CMAKE copying ${file} to binary directory")

@@ -1,0 +1,13 @@
+tr=0, vel=0.1: turn=-85
+vel=0.1:dist=0.11
+vel=0, servo=2, pservo=-90,vservo=0:time=1
+tr=0, vel=0.1: turn=-85
+label=2, vel=0.3, acc=1 : lv>5
+vel=0.1 : dist=0.2
+goto=2 : count=1
+tr=0, vel=0.1: turn=-60
+label=3, tr=0, vel=0.05: turn=30
+tr=0, vel=0.05: turn=-30
+vel=-0.05 : dist=0.03
+goto=3 : count=2
+event=9, vel=0 : dist=1

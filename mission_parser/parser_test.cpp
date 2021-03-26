@@ -32,7 +32,7 @@ int main(int argc, char** argv)
 
     ULoader loader = ULoader("./missions");
 
-    loader.loadMission("tunnel.mission", lines, &lineCount);
+    loader.loadMission("02_tunnel.mission", lines, &lineCount);
 
     //char** output = ULoader::createOutput();
     ULoader::formatMission(lines, output, lineCount, params);
