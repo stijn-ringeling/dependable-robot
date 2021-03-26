@@ -201,7 +201,7 @@ void toPositionTest4(char * s)
 int main ( int argc,char **argv ) 
 {
   int firstMissionPart = 1;
-  int lastMissionPart = 998;
+  int lastMissionPart = 5;
   const char * bridgeIp = "127.0.0.1"; // default connection IP to bridge
   const int MSL = 250;
   char s[MSL];

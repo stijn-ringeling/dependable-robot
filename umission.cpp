@@ -318,12 +318,42 @@ void UMission::runMission()
     // see also "ujoy.h"
     if (bridge->joy->button[BUTTON_RED])
     { // red button -> save image
-      if (not cam->saveImage)
-      {
-        printf("UMission::runMission:: button 1 (red) pressed -> save image\n");
-        cam->saveImage = true;
-      }
+        if (inManual) {
+            missionState = 0;
+            printf("Manual mode: Resetting state to zero.\n");
+        }
+        else {
+            printf("Tried resetting state, but not in manual mode.\n");
+        }
     }
+    if (bridge->joy->button[BUTTON_LB] && !lastLB) {
+        if (inManual) {
+            mission--;
+            missionState = 0;
+            if (mission < this->fromMission) {
+                mission = this->fromMission;
+            }
+            printf("Switched to mission %d\n", mission);
+        }
+        else {
+            printf("Tried to decrease mission, but not in manual mode\n");
+        }
+    }
+    lastLB = bridge->joy->button[BUTTON_LB];
+    if (bridge->joy->button[BUTTON_LR] && !lastRB) {
+        if (inManual) {
+            mission++;
+            missionState = 0;
+            if (mission > this->toMission) {
+                mission = this->toMission;
+            }
+            printf("Switched to mission %d\n", mission);
+        }
+        else {
+            printf("Tried to increase mission, but not in manual mode\n");
+        }
+    }
+    lastRB = bridge->joy->button[BUTTON_LR];
     if (bridge->joy->button[BUTTON_YELLOW])
     { // yellow button -> make ArUco analysis
       if (not cam->doArUcoAnalysis)
