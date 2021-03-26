@@ -1,5 +1,6 @@
 tr=0.24,vel=0.2: turn=-170
-irsensor=1,irdist=0.2,vel=0.2: dist=0.7
+irsensor=1,irdist=0.2,vel=0.2: dist=0.4
+vel=0.2:dist=0.2
 servo=2,pservo=600,tr=0.15,vel=0.3: turn=-85
 vel=0.2: xl > 10
 servo=2,pservo=900,vel=0.2:dist=0.05
