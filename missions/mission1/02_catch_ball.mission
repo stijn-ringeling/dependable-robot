@@ -1,4 +1,4 @@
-vel=0:time=2
+vel=0:time=0.5
 servo=2, pservo=-127, vservo=200: time=1
 servo=2, pservo=2000, vservo=0
 event=3, vel=0 : dist=1

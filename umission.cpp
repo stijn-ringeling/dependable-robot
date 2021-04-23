@@ -581,9 +581,9 @@ bool UMission::mission2(int & state)
           state++;
         }
         break;    
-    case 19:
+    //case 19:
       //if(bridge->event->isEventSet(3)){
-        state=999;
+        //state=999;
         //printf("@case=%d robot stopped -> stop mission\n",state);
       //}
 

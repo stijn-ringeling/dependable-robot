@@ -1,4 +1,5 @@
 tr=0, vel=0.2 :turn=160
+vel=0.3, edgel=0, white=1: dist=0.1
 vel=0.3, edgel=0, white=1 : xl>10
 tr=0.1, vel=0.2 :turn=85
 vel=0.3, edger=0, white=1 : xl>10
