@@ -614,44 +614,56 @@ bool UMission::mission3(int & state)
   switch (state)
   {
     case 0:
-      printf("# started mission 3.\n");
-      play.say("Mission 3 - climb down stairs", 90);
-      bridge->send("oled 5 mission 3 started");
-      state=11;
-      break;
+    {
+        printf("# started mission 3.\n");
+        play.say("Mission 3 - climb down stairs", 90);
+        bridge->send("oled 5 mission 3 started");
+        state = 11;
+        break;
+    }
     case 11:
-      loader->loadMission("01_stairs.mission", lines, &linecount);
-      bridge->event->isEventSet(1);
-      sendAndActivateSnippet(lines, linecount);
-      printf("# case=%d START STAIRS", state);
-      state = 20;
-      
-      break;   
-    case 20:
-      if(bridge->event->isEventSet((1))){
-        loader->loadMission("02_roundabout.mission", lines, &linecount);
-        bridge->event->isEventSet(2);
+    {
+        loader->loadMission("01_stairs.mission", lines, &linecount);
+        bridge->event->isEventSet(1);
         sendAndActivateSnippet(lines, linecount);
-        printf("# case=%d event 1 sensed -> stairs done - go to roundabout", state);
+        printf("# case=%d START STAIRS", state);
+        state = 21;
+        break;
+    }
+    case 21:
+        if (bridge->event->isEventSet((1))) {
+            loader->loadMission("02_push_bridge1.mission", lines, &linecount);
+            bridge->event->isEventSet(2);
+            sendAndActivateSnippet(lines, linecount);
+            printf("# case=%d event 1 sensed -> stairs done - go to build the first part of the bridge", state);
+            state++;
+        }
+        break;
+    case 22:
+      if(bridge->event->isEventSet(2)){
+        loader->loadMission("03_roundabout.mission", lines, &linecount);
+        bridge->event->isEventSet(3);
+        sendAndActivateSnippet(lines, linecount);
+        printf("# case=%d event 2 sensed -> bridge 1 done - go to roundabout", state);
         //state++;
         state++;
       }
       break;
-    case 21:
-    if(bridge->event->isEventSet((2))){
-        printf("# case=%d event 2 sensed -> roundabout done", state);
+    case 23:
+    if(bridge->event->isEventSet(3)){
+        printf("# case=%d event 3 sensed -> roundabout done", state);
         //state++;
         state = 999;
       }
       break;
-    case 22:
+    case 24:
       loader->loadMission("stop.mission", lines, &linecount);
       bridge->event->isEventSet(3);
       sendAndActivateSnippet(lines, linecount);
       printf("# case=%d  STOP MISSION", state);
       state++;
       break;
-    case 23:
+    case 25:
       if(bridge->event->isEventSet(3)){
         state=999;
         printf("@case=%d robot stopped\n",state);
@@ -782,16 +794,27 @@ bool UMission::mission4(int & state)
     case 7:
     {
         if (bridge->event->isEventSet(5)) {
-          loader->loadMission("07_go_home.mission", lines, &linecount);
-          bridge->event->isEventSet(6);
+            loader->loadMission("07_push_bridge2.mission", lines, &linecount);
+            bridge->event->isEventSet(6);
+            sendAndActivateSnippet(lines, linecount);
+            printf("Axe completed! Go home\n");
+            state++;
+        }
+        break;
+    }
+    case 8:
+    {
+        if (bridge->event->isEventSet(6)) {
+          loader->loadMission("08_go_home.mission", lines, &linecount);
+          bridge->event->isEventSet(7);
           sendAndActivateSnippet(lines, linecount);
           printf("Axe completed! Go home\n");
           state++;
         }
         break;
     }
-    case 8:
-      if(bridge->event->isEventSet(6)){
+    case 9:
+      if(bridge->event->isEventSet(7)){
         printf("Reached GOAL\n");
         state++;
       }

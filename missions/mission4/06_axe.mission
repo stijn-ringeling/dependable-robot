@@ -7,4 +7,4 @@ vel=0 : ir2>0.8
 vel=0 : time=0.5
 vel=1.5, acc=5,event=9, white=1, edger=0: dist=8.7
 vel=0, acc=10: time=3
-event=5
+event=5, vel=0

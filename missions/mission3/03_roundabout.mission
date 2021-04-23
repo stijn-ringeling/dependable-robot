@@ -1,12 +1,12 @@
-edger=0, white=1 : time=1
-vel=0.1,acc=1,edger=0,white=1: dist = 0.1
-vel=0.3,acc=1,edger=0,white=1: xl > 8
-tr=0, vel=0.1:turn=85
-vel=0.3,acc=1,edger=0,white=1: dist =1.5
-vel=0: ir2<0.5
+tr=0, vel=0.2:turn=-85
+vel=0.3,acc=1,edger=0,white=1: dist=0.2
+vel=0.3,acc=1,edger=0,white=1: xl>8
+vel=0.3,acc=1,edger=0,white=1: dist = 0.75
+label=2,vel=0: ir2<0.4
+goto=2 : count=2
 vel=0: ir2>0.6
 vel=0: time =2.5
-vel=0.3,acc=1,edger=0,white=1:dist=0.1
+vel=0.3,acc=1,edger=0,white=1:dist=0.05
 tr=0, vel=0.1: turn=85
 vel=0.4, acc=1 : dist = 0.4
 vel=0.4,acc=1,edger=0,white=1:dist=4.6
@@ -14,4 +14,4 @@ vel=0 : time=0.5
 tr=0, vel=0.3: turn=180
 vel=0.4, acc=1.5, edger=0, white=1: dist=1
 vel=0.1, acc=1.5, edger=0, white=1: ir2 <0.15
-event=2,vel=0,acc=1:time=1
+event=3,vel=0,acc=1:time=1

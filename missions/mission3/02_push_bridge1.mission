@@ -1,0 +1,18 @@
+edgel=1, white=1 : time=1
+vel=0.1,acc=1,edgel=1,white=1: dist = 0.1
+vel=0.2,acc=1,edgel=1,white=1: xl > 8
+edgel=1, white=1 : dist=0.3
+tr=0, vel=0.2 : turn=-85
+vel=0.2 : dist=0.21
+vel=-0.2 : dist=0.15
+vel=0
+tr=0, vel=0.2 : turn=80
+vel=0.2, edgel=1, white=1 : dist=0.55
+tr=0, vel=0.2 : turn=-85
+vel=0.2 : dist=0.3, time=3
+vel=-0.2 : dist=0.25
+vel=0
+tr=0, vel=0.2 : turn=-80
+vel=0.2, edger=0, white=1 : dist=0.5
+vel=0.2, edger=0, white=1 : xl>8
+event=2,vel=0,acc=1:time=1
