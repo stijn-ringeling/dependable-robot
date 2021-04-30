@@ -722,7 +722,7 @@ bool UMission::mission4(int & state)
         if (bridge->event->isEventSet(1)) {
             loader->loadMission("02_tunnel.mission", lines, &linecount);
             printf("End load mission\n");
-            float params[] = { v, wallD + 0.05, wallThreshold, cornerDistance, turnRadius + 0.05, turnAngle, upDist, d, WB / 2 }; //Vel, wall tracking distance, wall tracking stop distance, extra distance, turn radius, turn angle
+            float params[] = { v/2, wallD + 0.05, wallThreshold, cornerDistance, turnRadius + 0.05, turnAngle, upDist, d, WB / 2 }; //Vel, wall tracking distance, wall tracking stop distance, extra distance, turn radius, turn angle
             printf("Start formatting mission\n");
             loader->formatMission(lines, formatOutput, linecount, params);
             printf("Formatting mission end\n");
@@ -740,7 +740,7 @@ bool UMission::mission4(int & state)
         if (bridge->event->isEventSet(1)) {
             loader->loadMission("03_tunnel_open.mission", lines, &linecount);
             loader->clearOutput(formatOutput, 20);
-            float params[] = { turnAngle, d, WB / 2 };
+            float params[] = { -90, d, WB / 2 };
             loader->formatMission(lines, formatOutput, linecount, params);
             bridge->event->isEventSet(2);
             sendAndActivateSnippet(formatOutput, linecount);
