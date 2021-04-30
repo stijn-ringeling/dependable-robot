@@ -1,16 +1,16 @@
 edgel=-1, white=1 : time=1
 vel=0.1,acc=1,edgel=-0.5,white=1: dist = 0.2
 vel=0.3,acc=1,edgel=0,white=1: xl > 8
-edgel=1, white=1 : dist=0.3
+edgel=1, white=1 : dist=0.2
 tr=0, vel=0.2 : turn=-85
-vel=0.2 : dist=0.21
+vel=0.2 : dist=0.2
 vel=-0.2 : dist=0.15
 vel=0
 tr=0, vel=0.2 : turn=80
 vel=0.2, edgel=0, white=1 : dist=0.10
 vel=0.2, edgel=1, white=1 : dist=0.45
 tr=0, vel=0.2 : turn=-85
-vel=0.2 : dist=0.23, time=3
+vel=0.2 : dist=0.27, time=3
 vel=-0.2 : dist=0.25
 vel=0
 tr=0, vel=0.2 : turn=-80
