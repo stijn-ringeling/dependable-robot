@@ -1,5 +1,5 @@
 servo=2,pservo=900
-vel=0.3, acc=1 : dist=0.5
+vel=0.3, acc=1 : dist=0.6
 tr=0,vel=0.1: turn=-85
-vel=0.3: dist=0.3
+vel=0.3: dist=0.4
 vel=0, event=2:dist=1
