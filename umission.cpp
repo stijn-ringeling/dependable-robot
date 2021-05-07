@@ -472,6 +472,11 @@ bool UMission::mission1(int & state)
         state++;
       }
       break;
+    case 22:
+        if (bridge->event->isEventSet(4)) {
+            state++;
+        }
+        break;
     default:
       printf("mission 1 ended \n");
       bridge->send("oled 5 \"mission 1 ended.\"");
@@ -507,14 +512,12 @@ bool UMission::mission2(int & state)
       state=11;
       break;
     case 11:
-      if (bridge->event->isEventSet(4)){
         loader->loadMission("01_drive_until_ramp.mission", lines, &linecount);
         bridge->event->isEventSet(5);
         sendAndActivateSnippet(lines, linecount);
         printf("# case=%d event 4 sensed -> drive until the second crossing line");
         state++;
-      }
-      break;
+        break;
     case 12:
       if(bridge->event->isEventSet(5)){
         //go up the ramp

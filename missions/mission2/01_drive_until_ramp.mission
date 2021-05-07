@@ -1,4 +1,4 @@
-vel = 0, white=1 : time=1
+vel = 0,edger=0, white=1 : time=1
 vel=0.3, acc=1:lv>5
 vel=0.1 : dist=0.1
 vel=0.3, acc=1 : lv>5
