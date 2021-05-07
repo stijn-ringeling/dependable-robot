@@ -1,8 +1,8 @@
 servo=2, pservo=-45, vservo=250 : time=1
 vel=0.1 : dist=0.45
 label=2
-tr=0, vel=0.03: turn=45
-tr=0, vel=0.03: turn=-45
+tr=0, vel=0.05: turn=45
+tr=0, vel=0.05: turn=-45
 vel=-0.1:dist=0.03
 goto=2: count=2
 vel=-0.1:dist=0.2
