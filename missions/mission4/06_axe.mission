@@ -1,10 +1,10 @@
 vel=0.3,acc=1,edger=0,white=1: xl > 8
-tr=0.07, vel=0.1:turn=-85
-vel=0.3,acc=1,edger=0,white=1: dist=2.2
+tr=0, vel=0.1:turn=-90
+vel=0.3,acc=1,edger=0,white=1: dist=2.3
 servo=2, vel=0, pservo=900, vservo=0: time=1
 vel=0: ir2<0.50
 vel=0 : ir2>0.8
 vel=0 : time=0.5
 vel=1.5, acc=5,event=9, white=1, edger=0: dist=8.7
 vel=0, acc=10: time=3
-event=5, vel=0
+event=6

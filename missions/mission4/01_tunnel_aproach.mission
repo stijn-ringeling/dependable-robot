@@ -1,3 +1,4 @@
 vel=0.1,edger=0,white=1: ir2<0.15
 tr=0,vel=0.1:turn=85
+vel=0,acc=0.3:time=0.5
 event=1,vel=0:dist=1

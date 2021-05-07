@@ -722,13 +722,13 @@ bool UMission::mission4(int & state)
         if (bridge->event->isEventSet(1)) {
             loader->loadMission("02_tunnel.mission", lines, &linecount);
             printf("End load mission\n");
-            float params[] = { v/2, wallD + 0.05, wallThreshold, cornerDistance, turnRadius + 0.05, turnAngle, upDist, d, WB / 2 }; //Vel, wall tracking distance, wall tracking stop distance, extra distance, turn radius, turn angle
-            printf("Start formatting mission\n");
-            loader->formatMission(lines, formatOutput, linecount, params);
-            printf("Formatting mission end\n");
-            bridge->event->isEventSet(1);
-            printf("Event 1 set\n");
-            sendAndActivateSnippet(formatOutput, linecount);
+            //float params[] = { v, wallD + 0.05, wallThreshold, cornerDistance, turnRadius + 0.05, turnAngle, upDist, d, WB / 2 }; //Vel, wall tracking distance, wall tracking stop distance, extra distance, turn radius, turn angle
+            //printf("Start formatting mission\n");
+            //loader->formatMission(lines, formatOutput, linecount, params);
+            //printf("Formatting mission end\n");
+            bridge->event->isEventSet(2);
+            printf("Event 2 set\n");
+            sendAndActivateSnippet(lines, linecount);
             printf("mission sent\n");
             state++;
         }
@@ -737,22 +737,22 @@ bool UMission::mission4(int & state)
     }
     case 2:
     {//Open front door and go through tunnel
-        if (bridge->event->isEventSet(1)) {
+        if (bridge->event->isEventSet(2)) {
             loader->loadMission("03_tunnel_open.mission", lines, &linecount);
-            loader->clearOutput(formatOutput, 20);
-            float params[] = { -90, d, WB / 2 };
-            loader->formatMission(lines, formatOutput, linecount, params);
-            bridge->event->isEventSet(2);
-            sendAndActivateSnippet(formatOutput, linecount);
+            //loader->clearOutput(formatOutput, 20);
+            //float params[] = { turnAngle, d, WB / 2 };
+            //loader->formatMission(lines, formatOutput, linecount, params);
+            bridge->event->isEventSet(3);
+            sendAndActivateSnippet(lines, linecount);
             state++;
         }
         break;
     }
     case 3:
     {//Close front door
-        if (bridge->event->isEventSet(2)) {
+        if (bridge->event->isEventSet(3)) {
             loader->loadMission("04_tunnel_close.mission", lines, &linecount);
-            bridge->event->isEventSet(3);
+            bridge->event->isEventSet(4);
             sendAndActivateSnippet(lines, linecount);
             state++;
         }
@@ -760,22 +760,22 @@ bool UMission::mission4(int & state)
     }
     case 4:
     {//Get next to tunnel. Same method as before
-        if (bridge->event->isEventSet(3)) {
+        if (bridge->event->isEventSet(4)) {
             loader->loadMission("02_tunnel.mission", lines, &linecount);
-            loader->clearOutput(formatOutput, 20);
-            float params[] = { v / 2, wallD, wallThreshold, cornerDistance - 0.1, turnRadius, turnAngle, 0.1, d, WB / 2 }; //Vel, wall tracking distance, wall tracking stop distance, extra distance, turn radius, turn angle
-            loader->formatMission(lines, formatOutput, linecount, params);
-            bridge->event->isEventSet(1);
-            sendAndActivateSnippet(formatOutput, linecount);
+            //loader->clearOutput(formatOutput, 20);
+            //float params[] = { v / 2, wallD, wallThreshold, cornerDistance - 0.1, turnRadius, turnAngle, 0.1, d, WB / 2 }; //Vel, wall tracking distance, wall tracking stop distance, extra distance, turn radius, turn angle
+            //loader->formatMission(lines, formatOutput, linecount, params);
+            bridge->event->isEventSet(2);
+            sendAndActivateSnippet(lines, linecount);
             state++;
         }
         break;
     }
     case 5:
     {//Close second door
-        if (bridge->event->isEventSet(1)) {
+        if (bridge->event->isEventSet(2)) {
             loader->loadMission("05_tunnel_close_second.mission", lines, &linecount);
-            bridge->event->isEventSet(4);
+            bridge->event->isEventSet(5);
             sendAndActivateSnippet(lines, linecount);
             state++;
         }
@@ -783,9 +783,9 @@ bool UMission::mission4(int & state)
     }
     case 6:
     {
-        if (bridge->event->isEventSet(4)) {
+        if (bridge->event->isEventSet(5)) {
             loader->loadMission("06_axe.mission", lines, &linecount);
-            bridge->event->isEventSet(5);
+            bridge->event->isEventSet(6);
             sendAndActivateSnippet(lines, linecount);
             state++;
         }
@@ -793,7 +793,7 @@ bool UMission::mission4(int & state)
     }
     case 7:
     {
-        if (bridge->event->isEventSet(5)) {
+        if (bridge->event->isEventSet(6)) {
             loader->loadMission("07_push_bridge2.mission", lines, &linecount);
             bridge->event->isEventSet(6);
             sendAndActivateSnippet(lines, linecount);

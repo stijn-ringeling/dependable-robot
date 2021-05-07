@@ -1,8 +1,4 @@
-vel=0.1,tr=0.0: turn=-85
-vel=0.1: ir2<0.15
-tr=0.0: turn=85
-irsensor=1,irdist=0.2,vel=0.1,acc=1.0: dist=0.2
-vel=0.2: dist=0.45
+vel=0.3 : dist = 0.5
 servo=2,pservo=-100,tr=0,vel=0.1:turn=-85
 vel=0.3: xl>10
 servo=2,pservo=900,vel=0.2: dist=0.05
@@ -11,4 +7,4 @@ servo=2,pservo=500,vel=0:time=2
 servo=2,pservo=900:time=1
 tr=0.0,vel=0.1: turn=170
 edger=0,white=1,vel=0.3: dist=0.2
-event=4, vel=0: dist=1
+event=5, vel=0: dist=1
