@@ -1,0 +1,19 @@
+tr=0, vel=0.2 : turn=170
+vel=0.2, edgel=0, white=1 : dist=0.2
+vel=0.2, edgel=0, white=1 : xl>5
+vel=0.3, edgel=0, white=1 : dist=2.35
+tr=0, vel=0.2 : turn=85
+vel=0.2 : dist=0.9, time=6
+vel=-0.2 : dist=0.7
+tr=0, vel=0.2 : turn=70
+vel=0.3, edger=0, white=1 : dist=1
+vel=0.3, edger=0, white=1 : xl>5
+tr=0.1, vel=0.2 : turn=-85
+vel=0.3, edgel=-1, white=1 : xl>5
+vel=0.2 : dist=0.7
+tr=0, vel=0.2 : turn=-85
+vel=0.2 : dist=1.8
+tr=0, vel=0.2 : turn=-85
+vel=0, servo=2, pservo=200, vservo=0 : time=1
+servo=2, pservo=900, vservo=0
+event=6,vel=0 : dist=1

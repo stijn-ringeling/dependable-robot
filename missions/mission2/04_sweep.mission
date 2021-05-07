@@ -1,4 +1,4 @@
-servo=2, pservo=-90, vservo=250 : time=1
+servo=2, pservo=-45, vservo=250 : time=1
 vel=0.1 : dist=0.45
 label=2
 tr=0, vel=0.05: turn=45
