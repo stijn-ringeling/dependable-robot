@@ -1,6 +1,6 @@
 tr=0, vel=0.1 : turn=-85
-vel=0.3 : dist=0.19
-tr=0,vel=0.1:turn=-85
+vel=0.2 : dist=0.18
+tr=0,vel=0.1:turn=-80
 servo=2,pservo=200,vservo=0, vel=0.2:dist=0.25
 servo=02,pservo=900, vel=0: time=0.5
 vel=0.2:dist=0.1

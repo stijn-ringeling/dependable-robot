@@ -1,4 +1,4 @@
-vel=0.3 : dist = 0.5
+vel=0.3 : dist = 0.6
 servo=2,pservo=-100,tr=0,vel=0.1:turn=-85
 vel=0.3: xl>10
 servo=2,pservo=900,vel=0.2: dist=0.05

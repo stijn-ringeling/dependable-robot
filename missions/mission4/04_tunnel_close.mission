@@ -6,6 +6,6 @@ servo=2,pservo=900, vel=0:time=0.5
 tr=0,vel=0.1 : turn=-85
 servo=2,pservo=400,vel=0:time=1
 servo=2,pservo=900:time=1
-tr=0,vel=0.1:turn=85
+tr=0,vel=0.1:turn=90
 vel=0.3, acc=1 : dist=0.1
 event=4,vel=0: dist=1
