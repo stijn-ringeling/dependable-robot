@@ -1,7 +1,5 @@
 servo=2,pservo=900
-irsensor=1,irdist=%1,vel=0,acc=1: time=1
-irsensor=1,irdist=%1,vel=%0,acc=1: ir1>%2
-vel=%0: dist=%3
-tr=%4,vel=0.1: turn=%5
-vel=%0: dist=%6
-vel=0, event=1:dist=1
+vel=0.2, acc=1 : dist=0.5
+tr=0,vel=0.1: turn=-85
+vel=0.2: dist=0.4
+vel=0, event=2:dist=1
