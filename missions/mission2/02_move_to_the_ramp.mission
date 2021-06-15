@@ -1,4 +1,4 @@
 vel=0, edger=0 : time=1
 servo=2, pservo=2000, vservo=0: time=1
-vel=0.3,edger=0,white=1 : dist=1
+vel=0.2,edger=0,white=1 : dist=1
 event=6, vel=0:dist=1
