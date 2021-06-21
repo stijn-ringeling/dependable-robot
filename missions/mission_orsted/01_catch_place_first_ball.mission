@@ -5,23 +5,35 @@ tr=0.1, vel=0.2:turn=-85
 vel=0.2,acc=1,edger=2,white=1: dist = 0.1
 vel=0.2,acc=1,edger=2,white=1: xl > 10
 tr=0, vel=0.2:turn=-75
+vel=-0.2: dist=0.05
 vel=0, acc=3 : time=0.5
-servo=2, pservo=370, vservo=0: time=1
-servo=2, pservo=900, vservo=290: time=6
+servo=2, pservo=200, vservo=400: time=1
+servo=2, pservo=900, vservo=290: time=20
 
 tr=0, vel=0.2:turn=-85
 vel=0.2,edger=0,white=1: dist = 0.1
 vel=0.2,edger=0,white=1: xl > 10
 tr=0.05, vel=0.2:turn=80 
+
+vel=0:dist=1
+-------------
+vel =0, servo=2, pservo=900, vservo=0: time=1
+
 vel=0.2,edger=0,white=1: dist = 0.1
 vel=0.2,edger=0,white=1: xl > 10
-tr=0.05, vel=0.2:turn=80
+tr=0.05, vel=0.2:turn=70
 
-vel=0.2,acc=1,edger=0,white=1: dist=0.9
+vel=0.2,acc=1,edgel=0,white=1: dist=0.94
 tr=0, vel=0.2:turn=85
 label=0, vel=0.2: ir2 < 0.15
 goto=2 : count=2
+servo=2, pservo=700, vservo=0: time=1
+vel=0, acc=3 : time=0.5
+servo=2, pservo=900, vservo=0: time=1
 
+vel=0:dist=1
+
+------------
 vel=-0.2,acc=1,edger=0,white=1: lv>5
 tr=0, vel=0.2:turn=-85
 vel=0.2,edger=0,white=1: dist = 0.1
@@ -29,3 +41,61 @@ vel=0.2,edger=0,white=1: xl > 10
 tr=0, vel=0.2:turn=-85
 vel=0.2,edger=0,white=1: dist = 0.1
 vel = 0: dist=1
+
+vel=0:dist=1
+
+-----------
+label=1,vel =0, servo=2, pservo=900, vservo=0: time=1
+vel=0.2,acc=1,edger=2,white=1: dist = 0.1
+vel=0.2,acc=1,edger=2,white=1: xl > 10
+tr=0.1, vel=0.2:turn=-85 
+vel=0.2,acc=1,edger=2,white=1: dist = 0.1
+vel=0.2,acc=1,edger=2,white=1: xl > 10
+tr=0, vel=0.2:turn=75
+vel=-0.2: dist=0.05
+vel=0, acc=3 : time=0.5
+servo=2, pservo=200, vservo=400: time=1
+servo=2, pservo=900, vservo=290: time=20
+
+tr=0, vel=0.2:turn=85
+vel=0.2,edger=0,white=1: dist = 0.1
+vel=0.2,edger=0,white=1: xl > 10
+tr=0.05, vel=0.2:turn=80 
+
+
+vel=0:dist=1
+-----------
+vel =0, servo=2, pservo=900, vservo=0: time=1
+
+vel=0.2,edger=0,white=1: dist = 0.1
+vel=0.2,edger=0,white=1: xl > 10
+tr=0.05, vel=0.2:turn=70
+
+vel=0.2,acc=1,edgel=0,white=1: dist=0.94
+tr=0, vel=0.2:turn=85
+label=0, vel=0.2: ir2 < 0.15
+goto=2 : count=2
+servo=2, pservo=700, vservo=0: time=1
+vel=0, acc=3 : time=0.5
+servo=2, pservo=900, vservo=0: time=1
+
+
+vel=0:dist=1
+
+-----------
+
+vel=-0.2,acc=1,edger=0,white=1: lv>5
+vel=0, acc=3 : time=0.5
+tr=0.02, vel=0.2:turn=-70
+vel=0, acc=3 : time=1
+servo=2, pservo=200, vservo=400: time=1
+servo=2, pservo=900, vservo=290: time=20
+tr=0.02, vel=0.2:turn=70
+vel=0, acc=3 : time=0.5
+label=0, vel=0.2: ir2 < 0.15
+goto=2 : count=2
+servo=2, pservo=700, vservo=0: time=1
+vel=0, acc=3 : time=0.5
+servo=2, pservo=900, vservo=0: time=1
+
+vel=0:dist=1
