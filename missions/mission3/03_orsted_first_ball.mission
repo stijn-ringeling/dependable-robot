@@ -1,4 +1,4 @@
-vel =0, servo=2, pservo=900, vservo=0: time=1
+servo=2, pservo=900, vservo=0: time=0.1
 vel=0.2,acc=1,edger=2,white=1: dist = 0.1
 vel=0.2,acc=1,edger=2,white=1: xl > 10
 tr=0.1, vel=0.2:turn=-85 

@@ -1,7 +1,7 @@
 servo=2, pservo=900, vservo=0: time=1
-label=1,vel=0.2,acc=1,edgel=-1,white=1: xl > 15
+label=1,vel=0.2,acc=1,edgel=-1,white=1: xl > 50
 vel=0.2,acc=1,edgel=-1,white=1 : dist=0.1
-vel=0.2,acc=1,edgel=-1,white=1: xl > 15
+vel=0.2,acc=1,edgel=-1,white=1: xl > 50
 vel=-0.2: dist=0.6
 vel=0. acc=1 : time=0.5
 event=1 : time=1
