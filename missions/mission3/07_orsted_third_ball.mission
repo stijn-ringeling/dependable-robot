@@ -4,10 +4,11 @@ tr=0.02, vel=0.2:turn=-70
 vel=0, acc=3 : time=1
 servo=2, pservo=200, vservo=400: time=1
 servo=2, pservo=900, vservo=290: time=20
-tr=0.02, vel=0.2:turn=70
+vel=0, acc=3 : time=0.5
+tr=0.02, vel=0.2:turn=73
 vel=0, acc=3 : time=0.5
 label=0, vel=0.2: ir2 < 0.15
-goto=2 : count=2
+goto=0 : count=2
 servo=2, pservo=700, vservo=0: time=1
 vel=0, acc=3 : time=0.5
 servo=2, pservo=900, vservo=0: time=1

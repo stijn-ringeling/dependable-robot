@@ -2,6 +2,6 @@ vel=-0.2,acc=1: lv>5
 tr=0.1, vel=0.2:turn=85
 vel=0.2,edger=0,white=1: dist = 0.1
 vel=0.2,edger=0,white=1: xl > 10
-tr=0, vel=0.2:turn=-85
-vel=0.2,edger=0,white=1: dist = 0.1
+tr=0.1, vel=0.2:turn=-85
+vel=0.2,edger=2,white=1: dist = 0.1
 event=5,vel=0,acc=1:time=1
