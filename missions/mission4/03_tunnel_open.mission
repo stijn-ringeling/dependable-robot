@@ -1,9 +1,11 @@
 tr=0, vel=0.1 : turn=-85
-vel=0.2 : dist=0.2, time = 1
+vel=0.2 : dist=0.3, time = 1.5
 tr=0,vel=0.1:turn=-80
 vel = 0, acc=1: time = 0.2
+vel = -0.1: dist=0.05
+vel = 0, acc=1: time = 0.2
 servo=2,pservo=0,vservo=0 : time = 1
-vel=0.2:dist=0.35
+vel=0.2:dist=0.4
 vel = 0 : time = 0.5
 servo=2,pservo=900, vel=0: time=0.5
 tr=0,vel=0.1:turn=85

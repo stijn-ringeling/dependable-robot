@@ -1,8 +1,8 @@
 vel = 0,edger=0, white=1 : time=0.1
-vel=0.3, acc=1:lv>5
-vel=0.3 : dist=0.1
-vel=0.3, acc=1 : lv>5
-vel=0, acc=5 : time=1
+vel=0.3, acc=1:lv>15
+vel=0.3 : dist=0.3
+vel=0.3, acc=1 : lv>15
+vel=0, acc=5: time=0.2
 servo=2, pservo=-80, vservo=200: time=1
 tr=0.1, vel=0.2 : turn=-90
 servo=2, pservo=2000, vservo=0: time=0.1

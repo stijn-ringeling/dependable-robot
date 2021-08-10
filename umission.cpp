@@ -623,7 +623,9 @@ bool UMission::mission3(int & state)
         bridge->send("oled 5 mission 3 started");
         state = 11;
         // state = 22; test orsted mission 3 only
-        bridge->event->setEvent(2);
+        //state = 21; // skip stairs
+        //bridge->event->setEvent(2);
+        //bridge->event->setEvent(1);
         break;
     }
     case 11:
@@ -638,10 +640,12 @@ bool UMission::mission3(int & state)
     case 21:
         if (bridge->event->isEventSet((1))) {
             loader->loadMission("02_push_bridge1.mission", lines, &linecount);
-            bridge->event->isEventSet(2);
+            //bridge->event->isEventSet(2);
+            bridge->event->isEventSet(5);
             sendAndActivateSnippet(lines, linecount);
             printf("# case=%d event 1 sensed -> stairs done - go to build the first part of the bridge", state);
-            state++;
+            //state++;
+            state = 29;
         }
         break;
     case 22:

@@ -1,9 +1,9 @@
 servo=2, pservo=900, vservo=0: time=0.1
 vel=0.2,acc=1,edger=2,white=1: dist = 0.1
-vel=0.2,acc=1,edger=2,white=1: xl > 10
+vel=0.2,acc=1,edger=2,white=1: xl > 50
 tr=0.1, vel=0.2:turn=-85 
 vel=0.2,acc=1,edger=2,white=1: dist = 0.1
-vel=0.2,acc=1,edger=2,white=1: xl > 10
+vel=0.2,acc=1,edger=2,white=1: xl > 50
 tr=0, vel=0.2:turn=-75
 vel=-0.2: dist=0.05
 vel=0, acc=3 : time=0.5
@@ -11,6 +11,6 @@ servo=2, pservo=200, vservo=400: time=1
 servo=2, pservo=900, vservo=290: time=20
 tr=0, vel=0.2:turn=-70
 vel=0.2,edger=0,white=1: dist = 0.1
-vel=0.2,edger=0,white=1: xl > 10
+vel=0.2,edger=0,white=1: xl > 50
 tr=0.05, vel=0.2:turn=70     
 event=3,vel=0,acc=3:time=1
