@@ -621,11 +621,11 @@ bool UMission::mission3(int & state)
         printf("# started mission 3.\n");
         play.say("Mission 3 - climb down stairs", 90);
         bridge->send("oled 5 mission 3 started");
-        state = 11;
-        // state = 22; test orsted mission 3 only
+        //state = 11; // normal flow to stairs
+        state = 22; //test orsted mission 3 only
         //state = 21; // skip stairs
-        //bridge->event->setEvent(2);
-        //bridge->event->setEvent(1);
+        bridge->event->setEvent(2); // test orsted
+        //bridge->event->setEvent(1);//skip stairs
         break;
     }
     case 11:
