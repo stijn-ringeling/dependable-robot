@@ -1,9 +1,12 @@
 vel=-0.2,acc=1,edger=0,white=1: lv>5
 vel=0, acc=3 : time=0.5
-tr=0.1, vel=0.2:turn=-80
+tr=0.1, vel=0.2:turn=85
 vel=0, acc=3 : time=0.5
-vel=0.1, edger=2, white=1,acc=1: dist=0.15
-vel=0, acc=3 : time=1
+vel=0.3, edger=0, white=1,acc=1: xl>90
+vel=0, acc=3 : time=0.3
+tr=0, vel=0.2:turn=170
+vel=0.1, edger=2, white=1,acc=1: dist=0.93
+vel=0 : time=0.3
 servo=2, pservo=200, vservo=400: time=1
 servo=2, pservo=900, vservo=290: time=20
 vel=0, acc=3 : time=0.5

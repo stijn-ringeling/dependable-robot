@@ -621,10 +621,10 @@ bool UMission::mission3(int & state)
         printf("# started mission 3.\n");
         play.say("Mission 3 - climb down stairs", 90);
         bridge->send("oled 5 mission 3 started");
-        //state = 11; // normal flow to stairs
-        state = 22; //test orsted mission 3 only
+        state = 11; // normal flow to stairs
+        //state = 22; //test orsted mission 3 only
         //state = 21; // skip stairs
-        bridge->event->setEvent(2); // test orsted
+        //bridge->event->setEvent(2); // test orsted
         //bridge->event->setEvent(1);//skip stairs
         break;
     }
@@ -640,12 +640,12 @@ bool UMission::mission3(int & state)
     case 21:
         if (bridge->event->isEventSet((1))) {
             loader->loadMission("02_push_bridge1.mission", lines, &linecount);
-            //bridge->event->isEventSet(2);
-            bridge->event->isEventSet(5);
+            bridge->event->isEventSet(2);
+            //bridge->event->isEventSet(5);
             sendAndActivateSnippet(lines, linecount);
             printf("# case=%d event 1 sensed -> stairs done - go to build the first part of the bridge", state);
-            //state++;
-            state = 29;
+            state++;
+            //state = 29;
         }
         break;
     case 22:
@@ -720,7 +720,7 @@ bool UMission::mission3(int & state)
     case 29:
       if(bridge->event->isEventSet(5)){
         loader->loadMission("08_roundabout.mission", lines, &linecount);
-        bridge->event->isEventSet(7);
+        bridge->event->isEventSet(8);
         sendAndActivateSnippet(lines, linecount);
         printf("# case=%d event 5 sensed -> ready for roudabout", state);
         state++;
