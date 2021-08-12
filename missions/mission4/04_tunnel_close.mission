@@ -2,10 +2,11 @@ tr=0.24,vel=0.2: turn=-170
 vel=0.3, acc=1: dist=0.7
 tr=0,vel=0.2: turn=-85
 servo=2,pservo=600, vel=0.2: xl > 50
+vel=0.2, acc=1: dist=0.1
 servo=2,pservo=900, vel=0:time=0.5
 tr=0,vel=0.1 : turn=-85
-servo=2,pservo=400,vel=0:time=1
+servo=2,pservo=800,vel=0:time=1
 servo=2,pservo=900:time=1
 tr=0,vel=0.1:turn=90
-vel=0.3, acc=1 : dist=0.1
+vel=0.3, acc=1 : dist=0.01
 event=4,vel=0: dist=1
